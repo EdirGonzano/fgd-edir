@@ -1,0 +1,15 @@
+id_producto,nombre,categoria,precio
+1,Laptop 14 pulgadas,Cómputo,2400.0
+2,Monitor 24 pulgadas,Cómputo,650.0
+3,Teclado mecánico,Cómputo,180.0
+4,Mouse inalámbrico,Cómputo,55.0
+5,Webcam HD,Cómputo,120.0
+6,Smartphone gama media,Celulares,1200.0
+7,Smartphone gama alta,Celulares,3200.0
+8,Tablet 10 pulgadas,Celulares,900.0
+9,Audífonos Bluetooth,Accesorios,160.0
+10,Cargador rápido,Accesorios,70.0
+11,Funda protectora,Accesorios,35.0
+12,Memoria USB 64 GB,Accesorios,40.0
+13,Parlante portátil,Accesorios,220.0
+14,Smartwatch,Accesorios,480.0

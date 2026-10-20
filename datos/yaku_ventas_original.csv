@@ -1,0 +1,19 @@
+id_venta,fecha,cliente_nombre,cliente_distrito,producto_nombre,categoria_nombre,precio_unitario,local_nombre,local_distrito,cantidad,metodo_pago,total
+1,2026-04-01,Rosa Díaz,Los Olivos,Pan integral,Panes,0.8,Café Yaku Plaza,Independencia,3,Yape,2.4000000000000004
+2,2026-04-01,Rosa Díaz,Los Olivos,Pan francés,Panes,0.5,Café Yaku Central,Los Olivos,4,Tarjeta,2.0
+3,2026-04-01,Carlos Ríos,San Martín de Porres,Empanada de pollo,Salados,4.5,Café Yaku Plaza,Independencia,4,Tarjeta,18.0
+4,2026-04-01,Ana Torres,Los Olivos,Jugo de naranja,Bebidas,5.0,Café Yaku Central,Los Olivos,2,Tarjeta,10.0
+5,2026-04-02,Ana Torres,Los Olivos,Pan francés,Panes,0.5,Café Yaku Norte,Comas,2,Efectivo,1.0
+6,2026-04-02,Luis Ramos,Comas,Empanada de pollo,Salados,4.5,Café Yaku Norte,Comas,2,Yape,9.0
+7,2026-04-02,Rosa Díaz,Los Olivos,Pan integral,Panes,0.8,Café Yaku Norte,Comas,4,Yape,3.2
+8,2026-04-02,Carlos Ríos,San Martín de Porres,Pan integral,Panes,0.8,Café Yaku Plaza,Independencia,3,Yape,2.4000000000000004
+9,2026-04-03,Ana Torres,Los Olivos,Pan francés,Panes,0.5,Café Yaku Plaza,Independencia,1,Tarjeta,0.5
+10,2026-04-04,María Pérez,Independencia,Torta de chocolate,Pasteles,12.0,Café Yaku Norte,Comas,2,Efectivo,24.0
+11,2026-04-04,Rosa Díaz,Los Olivos,Pan francés,Panes,0.5,Café Yaku Central,Los Olivos,3,Efectivo,1.5
+12,2026-04-04,Luis Ramos,Comas,Torta de chocolate,Pasteles,12.0,Café Yaku Plaza,Independencia,4,Tarjeta,48.0
+13,2026-04-05,Rosa Díaz,Los Olivos,Jugo de naranja,Bebidas,5.0,Café Yaku Central,Los Olivos,2,Tarjeta,10.0
+14,2026-04-05,Jorge Lima,Comas,Café americano,Bebidas,4.0,Café Yaku Central,Los Olivos,3,Yape,12.0
+15,2026-04-05,Rosa Díaz,Los Olivos,Pan francés,Panes,0.5,Café Yaku Norte,Comas,3,Efectivo,1.5
+16,2026-04-05,Ana Torres,Los Olivos,Empanada de pollo,Salados,4.5,Café Yaku Norte,Comas,2,Yape,9.0
+17,2026-04-06,María Pérez,Independencia,Jugo de naranja,Bebidas,5.0,Café Yaku Central,Los Olivos,4,Tarjeta,20.0
+18,2026-04-06,Ana Torres,Los Olivos,Jugo de naranja,Bebidas,5.0,Café Yaku Norte,Comas,3,Tarjeta,15.0

@@ -1,0 +1,7 @@
+id_producto,nombre,id_categoria,precio_unitario
+1,Pan francés,1,0.5
+2,Pan integral,1,0.8
+3,Torta de chocolate,2,12.0
+4,Jugo de naranja,3,5.0
+5,Café americano,3,4.0
+6,Empanada de pollo,4,4.5
