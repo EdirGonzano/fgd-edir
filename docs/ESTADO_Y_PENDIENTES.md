@@ -36,3 +36,9 @@ Actualizado: 2026-10-20
 - Taller de modelado (`content/taller.js`, 5 diseños): revisa tablas, columnas, PK, FK, UNIQUE y pruebas de integridad con PRAGMA.
 - Banco de preguntas: ~330 fijas + 20 generadores dinámicos. 131 fichas de referencia.
 - Siguiente: continuar con el resto del sílabo (semanas 5–16: pandas, limpieza, regresión, K-Means, ETL, metadatos, arquitectura, calidad, gobierno). Falta definir con Edir el entorno (IDE) para Python.
+
+## Revisión del cuaderno Intermedio (2026-10-21)
+- Se comparó el término a término de los 4 cuadernos con el contenido. Faltaba: AUTOINCREMENT, scripts repetibles (DROP IF EXISTS en orden inverso), `conn.execute().fetchall()` / `executescript`, subconsulta dentro del SELECT, UNION ALL de control, WHERE+HAVING con totales que cambian, columna sin agrupar. Ya agregado (lecciones, 6 fichas, 7 retos r53–r59, 13 preguntas).
+- Corregido: `FGD.pregPorId` no incluía las preguntas de `preguntas3.js` (ahora se reconstruye al final de ese archivo).
+- Totales: 28 lecciones, 137 fichas, 59 retos, 344 preguntas fijas + 20 generadores.
+- Lección aprendida: revisar el material fuente completo antes de afirmar que algo está cubierto.

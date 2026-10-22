@@ -131,6 +131,22 @@ window.FGD = window.FGD || {};
   M("c4-39", 4, "dialectos", "Para concatenar texto en MySQL se usa…", ["CONCAT(a, b)", "a || b", "a & b", "a.join(b)"], 0, "SQLite y PostgreSQL usan ||.");
   M("c4-40", 4, "dialectos", "Un autonumérico en SQLite se logra con…", ["INTEGER PRIMARY KEY", "AUTO_INCREMENT", "SERIAL", "IDENTITY(1,1)"], 0, "Los otros nombres son de MySQL, PostgreSQL y SQL Server.");
 
+  /* ============ Cuadernos de clase: detalles que no deben escaparse ============ */
+  M("c4-41", 4, "ddl", "¿Qué diferencia hay entre INTEGER PRIMARY KEY y INTEGER PRIMARY KEY AUTOINCREMENT?", ["Con AUTOINCREMENT un id borrado nunca se reutiliza", "AUTOINCREMENT permite repetidos", "Solo AUTOINCREMENT es clave primaria", "Ninguna, son idénticos en todo"], 0, "AUTOINCREMENT garantiza ids que no se reciclan.");
+  N("c4-42", 4, "ddl", "¿Qué id recibe la fila 'd'?", "andes", "CREATE TABLE avisos (id INTEGER PRIMARY KEY AUTOINCREMENT, texto TEXT);\nINSERT INTO avisos (texto) VALUES ('a'), ('b'), ('c');\nDELETE FROM avisos WHERE id = 3;\nINSERT INTO avisos (texto) VALUES ('d');\nSELECT id FROM avisos WHERE texto = 'd';", "cell", "AUTOINCREMENT no reutiliza el 3: la nueva fila recibe el 4.");
+  O2("c4-43", 4, "ddl", "Ordena el script repetible de preparación (de arriba hacia abajo):", ["DROP TABLE IF EXISTS ventas (hija)", "DROP TABLE IF EXISTS empleados", "DROP TABLE IF EXISTS departamentos (padre)", "CREATE TABLE departamentos", "CREATE TABLE empleados", "CREATE TABLE ventas"], "Se borran primero las hijas y se crean primero las padres.");
+  function O2(id, sem, topic, q, items, why) { Q.push({ id, sem, topic, type: "order", q, items, why }); }
+  M("c4-44", 4, "python", "¿Cuándo usas conn.executescript(…) en lugar de conn.execute(…)?", ["Cuando tienes varias sentencias separadas por ;", "Cuando quieres parámetros ?", "Cuando haces un SELECT", "Nunca: es lo mismo"], 0, "execute = una sentencia; executescript = varias (sin parámetros).");
+  M("c4-45", 4, "python", "¿Qué devuelve conn.execute('SELECT …').fetchall()?", ["Una lista de tuplas", "Un DataFrame", "Un número", "Un diccionario"], 0, "Cada fila es una tupla.");
+  M("c4-46", 4, "python", "¿Por qué se escribe PRAGMA foreign_keys = ON justo al abrir la conexión?", ["Porque las FK vienen desactivadas en cada conexión nueva", "Para acelerar las consultas", "Para crear las tablas", "Para guardar los cambios"], 0, "Es un ajuste por conexión.");
+  N("c3-37", 3, "agrupar", "¿Cuántos empleados cuenta Marketing con COUNT(*) tras el LEFT JOIN? (el error clásico)", "andes", "SELECT COUNT(*) FROM departamentos d\nLEFT JOIN empleados e ON d.id_depto = e.id_depto\nWHERE d.nombre = 'Marketing';", "cell", "COUNT(*) cuenta la fila vacía del LEFT JOIN: da 1 aunque Marketing no tiene empleados.");
+  N("c3-38", 3, "agrupar", "¿Y con COUNT(e.id_emp)? (la forma correcta)", "andes", "SELECT COUNT(e.id_emp) FROM departamentos d\nLEFT JOIN empleados e ON d.id_depto = e.id_depto\nWHERE d.nombre = 'Marketing';", "cell", "COUNT(columna de la derecha) ignora los NULL: Marketing tiene 0.");
+  N("c3-39", 3, "agrupar", "¿Cuántos vendedores devuelve esta consulta? (WHERE antes de agrupar)", "andes", "SELECT id_emp, SUM(monto) FROM ventas\nWHERE monto >= 1000\nGROUP BY id_emp\nHAVING SUM(monto) > 6000;", "rows", "Al descartar las ventas pequeñas primero, los totales bajan y ninguno supera 6000.");
+  N("c3-40", 3, "agrupar", "¿Cuántos vendedores devuelve esta consulta? (solo HAVING)", "andes", "SELECT id_emp, SUM(monto) FROM ventas\nGROUP BY id_emp\nHAVING SUM(monto) > 6000;", "rows", "Se suman todas las ventas de cada vendedor.");
+  M("c3-41", 3, "agrupar", "SELECT id_emp, producto, SUM(monto) FROM ventas GROUP BY id_emp; En SQLite…", ["No da error pero producto es un valor cualquiera del grupo", "Da error siempre", "Agrupa también por producto", "Devuelve NULL en producto"], 0, "Los otros motores sí marcan error; conviene agrupar siempre bien.");
+  M("c3-42", 3, "sub", "¿Para qué sirve una subconsulta escalar dentro del SELECT?", ["Para agregar una columna calculada por cada fila", "Para filtrar filas", "Para ordenar", "Para unir tablas"], 0, "Debe devolver un único valor.");
+  M("c3-43", 3, "sub", "¿Qué comprueba esta consulta?", ["Cuántas filas tiene cada tabla tras cargar los datos", "Los tipos de datos", "Las FK", "Los índices"], 0, "UNION ALL apila un conteo por tabla.", "SELECT 'empleados' AS tabla, COUNT(*) FROM empleados\nUNION ALL SELECT 'ventas', COUNT(*) FROM ventas;", "andes");
+
   /* ================================================================
      GENERADORES de los complementos
      ================================================================ */
@@ -195,4 +211,6 @@ window.FGD = window.FGD || {};
     const a = [0, 1, 2, 3, 4][casos.findIndex((c) => c[0] === txt)], lista = shuf(opts.map((o, i) => [o, i])).slice(0, 5);
     return { type: "mcq", q: `¿Cuál es el problema principal de este diseño?\n«${txt}»`, opts: lista.map((x) => x[0]), a: lista.findIndex((x) => x[1] === a), why };
   });
+
+  FGD.pregPorId = Object.fromEntries(FGD.preguntas.map((q) => [q.id, q]));
 })();
