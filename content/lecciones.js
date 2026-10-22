@@ -39,6 +39,52 @@ window.FGD = window.FGD || {};
       { t: "refs", ids: ["ciclo", "gigo", "metadatos", "roles"] },
     ] },
 
+    { id: "s1-activo", sem: 1, titulo: "El dato como activo: valor, Big Data y Ciencia de Datos", min: 9, bloques: [
+      { t: "p", h: "Un <strong>activo</strong> es algo que genera valor para una organización. Hoy los datos lo son: quien los recolecta, los limpia y los analiza antes toma mejores decisiones, más rápido y con menos riesgo." },
+      { t: "table", head: ["Empresa / sector", "Qué hace con los datos", "Valor que obtiene"], rows: [
+        ["Plataformas de video", "Analizan qué ven millones de usuarios para recomendar contenido", "Menos abandono y más tiempo de uso"],
+        ["Comercio en línea", "Predicen qué comprará cada cliente", "Gran parte de las ventas viene de recomendaciones"],
+        ["Transporte y delivery", "Usan GPS, historial de pedidos, clima y tráfico en tiempo real", "Reducen tiempos de entrega y suben la satisfacción"],
+        ["Banca", "Modelos de Machine Learning detectan transacciones anómalas en milisegundos", "Evitan pérdidas por fraude"],
+        ["Supermercados", "Predicen la demanda por región", "Menos quiebres de stock y menos desperdicio"] ] },
+      { t: "tip", h: "La frase clásica: «los datos son el nuevo petróleo»: valiosos, pero <strong>sin refinar no sirven</strong>. Refinar = capturar, almacenar, limpiar y analizar (el ciclo de vida del dato)." },
+      { t: "h2", h: "Gestión de datos" },
+      { t: "p", h: "<strong>Gestión de datos</strong> es el conjunto de prácticas para que los datos sean <em>disponibles, confiables, seguros y útiles</em>: captura, almacenamiento, calidad, metadatos, seguridad y gobierno. Es la base de cualquier proyecto de análisis." },
+      { t: "h2", h: "Big Data: las «V»" },
+      { t: "table", head: ["V", "Idea", "Ejemplo"], rows: [
+        ["Volumen", "Cantidades enormes de datos", "Millones de tuits o clics por día"],
+        ["Velocidad", "Se generan y deben procesarse muy rápido", "Detección de fraude en milisegundos"],
+        ["Variedad", "Datos estructurados, semiestructurados y no estructurados", "Tablas, JSON, imágenes, audio"],
+        ["Veracidad", "Qué tan confiables y limpios son", "Datos duplicados o inexactos"],
+        ["Valor", "La utilidad real para decidir", "Reducir costos, vender más, anticipar riesgos"] ] },
+      { t: "h2", h: "¿Y la Ciencia de Datos?" },
+      { t: "list", items: ["<strong>Big Data</strong> se ocupa de <em>manejar</em> datos grandes y variados (almacenarlos, procesarlos).", "<strong>Ciencia de Datos</strong> se ocupa de <em>extraer conocimiento</em> con estadística, programación y Machine Learning.", "Este curso es la base de ambas: primero se aprende a <strong>organizar y consultar</strong> datos (SQL, modelado), luego a limpiarlos y analizarlos (Python), y finalmente a gobernarlos."] },
+      { t: "think", h: "Foro de la semana 1: ¿qué características debe tener un dato para ser útil en tu empresa o carrera? Da un ejemplo real e identifica su tipo.", a: "Un dato útil es <strong>exacto</strong>, <strong>completo</strong>, <strong>consistente</strong>, <strong>oportuno</strong> (llega a tiempo), <strong>único</strong> (sin duplicados) y <strong>válido</strong> (respeta formato y reglas). Ejemplo: la <em>fecha y el monto de una venta registrada en una tabla</em> de ventas: es un dato <strong>estructurado</strong> (filas y columnas), útil porque con él se calculan ingresos por mes y se decide cuánto comprar. Si el monto llegara vacío o duplicado, la decisión sería mala (GIGO)." },
+      { t: "exam", h: "Preguntas típicas: <strong>¿por qué el dato es un activo?</strong> (genera valor si se gestiona bien) · <strong>¿qué es GIGO?</strong> · <strong>¿diferencia entre Big Data y Ciencia de Datos?</strong> · <strong>¿qué roles intervienen?</strong>" },
+      { t: "refs", ids: ["dato-activo", "big-data-v", "gigo", "roles"] },
+    ] },
+    { id: "s1-explorar", sem: 1, titulo: "Explorar un dataset: tipos de columnas y hallazgos (Lab D1)", min: 10, bloques: [
+      { t: "p", h: "El primer laboratorio pide abrir un conjunto de datos público (por ejemplo de <strong>Kaggle</strong>) en Google Colab, <strong>identificar el tipo de cada columna</strong> y <strong>documentar hallazgos</strong>. Es la primera tarea real de un analista." },
+      { t: "h2", h: "Tipos de variable" },
+      { t: "table", head: ["Tipo", "Qué es", "Ejemplos", "En pandas / SQL"], rows: [
+        ["Numérica continua", "Número con decimales", "monto, sueldo, peso", "float64 / REAL"],
+        ["Numérica discreta", "Conteos enteros", "unidades, n.° de hijos", "int64 / INTEGER"],
+        ["Categórica nominal", "Categorías sin orden", "ciudad, canal, categoría", "object / TEXT"],
+        ["Categórica ordinal", "Categorías con orden", "bajo-medio-alto, 1 a 5 estrellas", "object o categoría ordenada"],
+        ["Fecha / hora", "Momento en el tiempo", "fecha_venta", "datetime64 / TEXT ISO"],
+        ["Texto libre", "Frases sin formato fijo", "comentarios, reseñas", "object (no estructurado)"],
+        ["Lógica", "Verdadero o falso", "activo, pagado", "bool / INTEGER 0-1"] ] },
+      { t: "tip", h: "Un código postal o un DNI se escribe con números pero <strong>no es numérico</strong>: no se suma ni se promedia. Es una categoría (identificador)." },
+      { t: "h2", h: "Receta de exploración con pandas en Colab" },
+      { t: "code", titulo: "Pega esto en Google Colab (los CSV del proyecto están en la carpeta datos/ del repositorio)", src: "import pandas as pd\n\nurl = \"https://raw.githubusercontent.com/EdirGonzano/fgd-edir/main/datos/chasqui_ventas.csv\"\ndf = pd.read_csv(url)\n\ndf.head()              # primeras filas: ¿qué hay en cada columna?\ndf.shape               # (filas, columnas)\ndf.info()              # tipo de cada columna y cuántos valores NO nulos tiene\ndf.describe()          # resumen numérico: media, mínimo, máximo, cuartiles\ndf.isna().sum()        # cuántos valores faltantes hay por columna\ndf.duplicated().sum()  # filas duplicadas\ndf[\"sede\"].value_counts()   # frecuencia de cada categoría" },
+      { t: "table", head: ["Pregunta del análisis", "Instrucción"], rows: [
+        ["¿Cuántas filas y columnas hay?", "<code>df.shape</code>"], ["¿De qué tipo es cada columna?", "<code>df.info()</code> / <code>df.dtypes</code>"], ["¿Hay datos faltantes?", "<code>df.isna().sum()</code>"], ["¿Hay duplicados?", "<code>df.duplicated().sum()</code>"], ["¿Cómo se distribuye una variable numérica?", "<code>df.describe()</code>"], ["¿Qué categorías hay y cuántas veces?", "<code>df[col].value_counts()</code>"] ] },
+      { t: "h2", h: "Cómo documentar hallazgos" },
+      { t: "list", items: ["<strong>Fuente y contexto:</strong> de dónde viene el dato, quién lo generó, cuándo.", "<strong>Estructura:</strong> n.° de filas y columnas; tipo de cada columna (tabla).", "<strong>Calidad:</strong> faltantes, duplicados, valores raros (ej. edades negativas), formatos mezclados.", "<strong>Hallazgos:</strong> 2 o 3 observaciones concretas con cifras (no opiniones).", "<strong>Pendientes:</strong> qué limpiar o qué dato adicional haría falta."] },
+      { t: "exam", h: "En un examen te darán una lista de columnas (<code>edad, ciudad, fecha_compra, calificación 1-5, comentario</code>) y te pedirán su tipo. Respuesta modelo: numérica discreta, categórica nominal, fecha, categórica ordinal, texto libre (no estructurado)." },
+      { t: "refs", ids: ["tipos-variable", "pandas-explorar", "py-readcsv", "metadatos"] },
+    ] },
+
     /* ====================== SEMANA 2 ====================== */
     { id: "s2-base", sem: 2, titulo: "SQL, SQLite y la anatomía de una tabla", min: 7, bloques: [
       { t: "p", h: "<strong>SQL</strong> es el idioma con el que le hacemos preguntas a los datos. <strong>SQLite</strong> es el motor que lo entiende: un solo archivo, sin servidor. Son cosas distintas." },
@@ -80,6 +126,10 @@ window.FGD = window.FGD || {};
       { t: "try", db: "chasqui", sql: "SELECT COUNT(*) AS filas,\n       COUNT(fecha_registro) AS con_fecha,\n       COUNT(DISTINCT ciudad) AS ciudades\nFROM clientes;", titulo: "¿Hay NULL en fecha_registro?" },
       { t: "h2", h: "Lectura rigurosa: qué mide cada cifra" },
       { t: "table", head: ["Cifra", "Sí mide", "NO mide"], rows: [["COUNT(*)", "cuántos registros de venta hay", "unidades ni clientes únicos"], ["SUM(monto)", "ingreso registrado", "utilidad: faltan costos"], ["AVG(monto)", "monto promedio por registro", "gasto promedio por cliente"]] },
+      { t: "h2", h: "Informe comparado: ¿a qué sede darías el presupuesto?" },
+      { t: "p", h: "Una tarea típica de la clase: comparar dos sedes con consultas y <strong>decidir con prudencia</strong>. Una puede tener más ventas y otra un monto promedio mayor." },
+      { t: "try", db: "chasqui", sql: "SELECT sede,\n       COUNT(*) AS ventas,\n       SUM(monto) AS ingreso,\n       ROUND(AVG(monto), 2) AS monto_promedio\nFROM ventas\nWHERE sede IN ('Lima', 'Piura')\nGROUP BY sede;", titulo: "Lima vs Piura: cantidad, ingreso y promedio" },
+      { t: "think", h: "Si dos sedes tienen el mismo número de ventas pero una tiene mucho más ingreso, ¿ya sabes cuál merece la campaña?", a: "<strong>Todavía no.</strong> El ingreso es mayor, pero no es utilidad (faltan costos), los datos cubren pocos días y puede deberse a una sola venta grande. Antes de decidir pediría: costos y márgenes, más periodos, número de clientes únicos, y revisaría si el promedio lo explican pocas ventas muy altas." },
       { t: "exam", h: "Con solo 6 días de datos simulados puedes practicar consultas, pero <strong>no</strong> afirmar causas ni tendencias generales. Es el tipo de «lectura prudente» que se evalúa." },
       { t: "refs", ids: ["count", "sum", "avg", "maxmin", "round", "case"] },
     ] },
@@ -111,6 +161,7 @@ window.FGD = window.FGD || {};
       { t: "try", db: "chasqui", sql: "SELECT c.id_cliente, c.nombre\nFROM clientes AS c\nLEFT JOIN pedidos AS p ON c.id_cliente = p.id_cliente\nWHERE p.id_pedido IS NULL;", titulo: "LEFT JOIN + IS NULL = clientes que nunca compraron" },
       { t: "exam", h: "Pregunta clásica de foro/examen: <strong>¿cuándo INNER y cuándo LEFT?</strong> INNER si solo te interesan los registros relacionados. LEFT si no debes perder ninguna fila de la tabla principal (todos los clientes, compren o no). Los clientes que nunca compraron <em>desaparecen</em> con INNER y aparecen con NULL en LEFT." },
       { t: "trap", h: "Un cliente con 2 pedidos aparece <strong>2 veces</strong> en el resultado: una fila por cada pedido. Un JOIN multiplica filas, no las colapsa." },
+      { t: "think", h: "Foro de la semana 3: ¿cuándo usarías INNER JOIN y cuándo LEFT JOIN? ¿Qué pasa con los clientes que nunca compraron? Explica con resultados.", a: "Uso <strong>INNER JOIN</strong> cuando solo me interesan los registros que tienen relación en ambas tablas (por ejemplo, los pedidos con su cliente). Uso <strong>LEFT JOIN</strong> cuando no debo perder ninguna fila de la tabla principal (todos los clientes, compren o no). Con INNER JOIN los clientes que nunca compraron <em>desaparecen</em> (en esta base, 42 filas); con LEFT JOIN <em>aparecen con NULL</em> en las columnas de pedidos (49 filas: 42 pedidos + 7 clientes sin pedidos). Con <code>WHERE p.id_pedido IS NULL</code> los aíslo para marketing. Cuidado: que no hayan comprado no significa que estén «perdidos»; puede que sean nuevos." },
       { t: "refs", ids: ["inner", "left", "left-null", "join3"] },
     ] },
     { id: "s3-fulljoin", sem: 3, titulo: "RIGHT JOIN, FULL JOIN y JOIN de 3 tablas", min: 7, bloques: [

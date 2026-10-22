@@ -42,3 +42,9 @@ Actualizado: 2026-10-20
 - Corregido: `FGD.pregPorId` no incluía las preguntas de `preguntas3.js` (ahora se reconstruye al final de ese archivo).
 - Totales: 28 lecciones, 137 fichas, 59 retos, 344 preguntas fijas + 20 generadores.
 - Lección aprendida: revisar el material fuente completo antes de afirmar que algo está cubierto.
+
+## Revisión del temario S1–S4 contra el sílabo (2026-10-21)
+- Faltaba: «el dato como activo empresarial» + Big Data (5 V) + relación con Ciencia de Datos, y el Lab D1 (explorar un dataset: tipos de variable, pandas, documentar hallazgos). Agregadas 2 lecciones en la semana 1 (`s1-activo`, `s1-explorar`), 4 fichas y 14 preguntas.
+- Agregadas las guías de reflexión de foro (semanas 1 y 3) y el informe comparado Lima vs Piura (semana 2).
+- Totales: 30 lecciones, 141 fichas, 59 retos, 358 preguntas fijas + 20 generadores.
+- Pendiente por comparar a nivel de término: PPT de semanas 1–4 diapositiva por diapositiva (solo se leyeron títulos y partes), labs D1/D2 y calificado 1, manuales 03/04 en PDF.
