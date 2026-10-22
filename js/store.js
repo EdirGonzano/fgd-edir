@@ -18,10 +18,14 @@ window.FGD = window.FGD || {};
     perfecto: ["💎", "Sin errores", "Simulacro con 90% o más"],
     repasador: ["🧠", "Memoria de acero", "50 repasos completados"],
     labero: ["🧪", "Rata de laboratorio", "Ejecutaste 25 consultas en el laboratorio"],
+    gimnasio10: ["🏋️", "Gimnasio SQL", "Resolviste 10 retos"],
+    gimnasio30: ["🥇", "Atleta del SQL", "Resolviste 30 retos"],
+    gimnasio50: ["👑", "Maestro del SQL", "Resolviste todos los retos"],
+    arquitecto: ["📐", "Arquitecto de datos", "Aprobaste 3 diseños en el taller de modelado"],
   };
   const hoy = () => new Date().toISOString().slice(0, 10);
   const dias = (iso, n) => { const d = new Date(iso + "T12:00:00"); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
-  const vacio = () => ({ xp: 0, racha: { ult: null, n: 0, mejor: 0 }, srs: {}, hechas: {}, insignias: {}, errores: [], recientes: [], dias: {}, sims: [], stats: { sql: 0, join: 0, lab: 0, repasos: 0 } });
+  const vacio = () => ({ xp: 0, racha: { ult: null, n: 0, mejor: 0 }, srs: {}, hechas: {}, insignias: {}, errores: [], recientes: [], retos: {}, taller: {}, dias: {}, sims: [], stats: { sql: 0, join: 0, lab: 0, repasos: 0 } });
   let S;
   try { S = Object.assign(vacio(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { S = vacio(); }
   const guardar = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
@@ -75,6 +79,8 @@ window.FGD = window.FGD || {};
     get: () => S, guardar, hoy, nivel, xp, registrar, vencidas, dominada, dar, toast, INSIGNIAS, NIVELES,
     onChange: (f) => listeners.push(f),
     marcarLeccion(id, ev) { if (!S.hechas[id]) { S.hechas[id] = hoy(); xp(20, ev); } },
+    marcarReto(id, nivel, ev) { if (S.retos[id]) return false; S.retos[id] = hoy(); xp([0, 15, 25, 40][nivel] || 15, ev); const n = Object.keys(S.retos).length; if (n >= 10) dar('gimnasio10'); if (n >= 30) dar('gimnasio30'); if (n >= (FGD.retos || []).length) dar('gimnasio50'); guardar(); return true; },
+    marcarTaller(id, ev) { if (S.taller[id]) return false; S.taller[id] = hoy(); xp(60, ev); if (Object.keys(S.taller).length >= 3) dar('arquitecto'); guardar(); return true; },
     labRun() { S.stats.lab++; if (S.stats.lab >= 25) dar("labero"); guardar(); },
     exportar() { return JSON.stringify(S); },
     importar(txt) { try { S = Object.assign(vacio(), JSON.parse(txt)); guardar(); return true; } catch (e) { return false; } },

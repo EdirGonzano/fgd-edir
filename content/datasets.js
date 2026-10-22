@@ -1,5 +1,43 @@
 window.FGD = window.FGD || {};
 FGD.datasets = {
+ "andes": {
+  "nombre": "Andes Soft",
+  "desc": "Empresa de software: empleados con jefe, departamentos, proyectos y ventas (ejercicios de cierre de SQL)",
+  "ddl": "CREATE TABLE departamentos (id_depto INTEGER PRIMARY KEY, nombre TEXT NOT NULL UNIQUE, ciudad TEXT NOT NULL);\nCREATE TABLE empleados (id_emp INTEGER PRIMARY KEY, nombre TEXT NOT NULL, cargo TEXT NOT NULL, sueldo REAL NOT NULL CHECK (sueldo > 0),\n  ciudad TEXT NOT NULL, correo TEXT, id_depto INTEGER NOT NULL, id_jefe INTEGER, fecha_ingreso TEXT NOT NULL,\n  FOREIGN KEY (id_depto) REFERENCES departamentos(id_depto), FOREIGN KEY (id_jefe) REFERENCES empleados(id_emp));\nCREATE TABLE proyectos (id_proyecto INTEGER PRIMARY KEY, nombre TEXT NOT NULL, estado TEXT NOT NULL, presupuesto REAL NOT NULL, id_depto INTEGER NOT NULL,\n  FOREIGN KEY (id_depto) REFERENCES departamentos(id_depto));\nCREATE TABLE ventas (id_venta INTEGER PRIMARY KEY, fecha TEXT NOT NULL, id_emp INTEGER NOT NULL, producto TEXT NOT NULL, monto REAL NOT NULL,\n  FOREIGN KEY (id_emp) REFERENCES empleados(id_emp));",
+  "datos": "INSERT INTO departamentos (id_depto,nombre,ciudad) VALUES (1,'Sistemas','Cusco');\nINSERT INTO departamentos (id_depto,nombre,ciudad) VALUES (2,'Ventas','Lima');\nINSERT INTO departamentos (id_depto,nombre,ciudad) VALUES (3,'Finanzas','Lima');\nINSERT INTO departamentos (id_depto,nombre,ciudad) VALUES (4,'RRHH','Cusco');\nINSERT INTO departamentos (id_depto,nombre,ciudad) VALUES (5,'Marketing','Arequipa');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (1,'Alicia Paucar','Analista',2800.0,'Cusco','a.paucar@andes.pe',1,3,'2024-03-01');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (2,'Marisol Cutipa','Asistente',2200.0,'Cusco','m.cutipa@andes.pe',4,5,'2025-01-13');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (3,'Jorge Quiroz','Jefe de Sistemas',5200.0,'Cusco','j.quiroz@andes.pe',1,NULL,'2019-05-12');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (4,'Víctor Layme','Vendedor',3100.0,'Lima','v.layme@andes.pe',2,6,'2022-08-15');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (5,'Lucía Mendieta','Jefa de RRHH',4800.0,'Cusco','l.mendieta@andes.pe',4,NULL,'2018-02-20');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (6,'Pablo Cornejo','Jefe de Ventas',5000.0,'Lima','p.cornejo@andes.pe',2,NULL,'2017-11-05');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (7,'Rosa Tacuri','Contadora',3900.0,'Lima','r.tacuri@andes.pe',3,9,'2021-01-18');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (8,'Josué Huillca','Programador',3500.0,'Cusco',NULL,1,3,'2023-06-30');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (9,'Elena Paredes','Jefa de Finanzas',5100.0,'Lima','e.paredes@andes.pe',3,NULL,'2016-09-09');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (10,'Mario Salas','Vendedor',2900.0,'Arequipa','m.salas@andes.pe',2,6,'2023-10-02');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (11,'Diana Vega','Programadora',3700.0,'Cusco','d.vega@andes.pe',1,3,'2022-04-11');\nINSERT INTO empleados (id_emp,nombre,cargo,sueldo,ciudad,correo,id_depto,id_jefe,fecha_ingreso) VALUES (12,'Hugo Flores','Analista de datos',3600.0,'Lima','h.flores@andes.pe',1,3,'2024-01-22');\nINSERT INTO proyectos (id_proyecto,nombre,estado,presupuesto,id_depto) VALUES (1,'Portal de clientes','En curso',48000.0,1);\nINSERT INTO proyectos (id_proyecto,nombre,estado,presupuesto,id_depto) VALUES (2,'Migración a la nube','En curso',85000.0,1);\nINSERT INTO proyectos (id_proyecto,nombre,estado,presupuesto,id_depto) VALUES (3,'Campaña de verano','Finalizado',22000.0,2);\nINSERT INTO proyectos (id_proyecto,nombre,estado,presupuesto,id_depto) VALUES (4,'Auditoría anual','En curso',30000.0,3);\nINSERT INTO proyectos (id_proyecto,nombre,estado,presupuesto,id_depto) VALUES (5,'Programa de bienestar','Pausado',12000.0,4);\nINSERT INTO proyectos (id_proyecto,nombre,estado,presupuesto,id_depto) VALUES (6,'App de ventas','Finalizado',40000.0,2);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (1,'2026-03-02',4,'Licencia Office',1500.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (2,'2026-03-05',10,'Antivirus Anual',300.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (3,'2026-03-09',4,'Soporte Técnico',800.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (4,'2026-03-15',6,'Laptop Empresarial',4200.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (5,'2026-03-21',4,'Antivirus Anual',300.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (6,'2026-04-01',10,'Licencia Office',1500.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (7,'2026-04-07',6,'Soporte Técnico',800.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (8,'2026-04-12',4,'Laptop Empresarial',4200.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (9,'2026-04-20',10,'Soporte Técnico',800.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (10,'2026-05-03',6,'Licencia Office',1500.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (11,'2026-05-11',4,'Antivirus Anual',300.0);\nINSERT INTO ventas (id_venta,fecha,id_emp,producto,monto) VALUES (12,'2026-05-25',10,'Laptop Empresarial',4200.0);",
+  "tablas": {
+   "departamentos": [
+    "id_depto",
+    "nombre",
+    "ciudad"
+   ],
+   "empleados": [
+    "id_emp",
+    "nombre",
+    "cargo",
+    "sueldo",
+    "ciudad",
+    "correo",
+    "id_depto",
+    "id_jefe",
+    "fecha_ingreso"
+   ],
+   "proyectos": [
+    "id_proyecto",
+    "nombre",
+    "estado",
+    "presupuesto",
+    "id_depto"
+   ],
+   "ventas": [
+    "id_venta",
+    "fecha",
+    "id_emp",
+    "producto",
+    "monto"
+   ]
+  }
+ },
  "chasqui": {
   "nombre": "Chasqui Tech",
   "desc": "Tienda de tecnología con 4 sedes y canal Web (semanas 2 y 3)",

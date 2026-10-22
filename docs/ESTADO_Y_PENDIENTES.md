@@ -27,3 +27,12 @@ Actualizado: 2026-10-20
 - Resumen personal de labs S3–S4: `FGD_resumen_labs_S3_S4.md` (no se sube a GitHub: está en .gitignore).
 - Probar una pregunta suelta: `#/practica/q:3-54,g-wh`.
 - Aprendizaje al escribir JS desde Python: cuidar que `\n` dentro de cadenas se escriba como barra invertida + n (chr(92)+'n'); mejor usar la herramienta Edit/Write.
+
+## Cierre de SQL (2026-10-21, semana 4)
+- La web sigue el sílabo por semanas; SQL se cierra en la semana 4. Cada semana tiene «Lo que se ve en clase» y «Complementos para dominar SQL» (`comp: true`, archivo `content/lecciones_sql.js`).
+- 12 lecciones complemento: funciones de texto/fechas, NULL, CASE y pivot, self/CROSS/USING, subconsultas/EXISTS/CTE/conjuntos, funciones de ventana, método y depuración, diseño de modelos, DDL (ALTER/índices/EXPLAIN), DML + transacciones + DCL + inyección SQL, SQL con Python/pandas, mapa final y dialectos.
+- Tercera base ficticia: Andes Soft (`empleados` con `id_jefe`, `departamentos`, `proyectos`, `ventas`), en `datos/` y `content/datasets.js`.
+- Gimnasio de retos (`content/retos.js`, 52 retos con corrección automática, incluso DML/DDL comparando el estado final con `check`).
+- Taller de modelado (`content/taller.js`, 5 diseños): revisa tablas, columnas, PK, FK, UNIQUE y pruebas de integridad con PRAGMA.
+- Banco de preguntas: ~330 fijas + 20 generadores dinámicos. 131 fichas de referencia.
+- Siguiente: continuar con el resto del sílabo (semanas 5–16: pandas, limpieza, regresión, K-Means, ETL, metadatos, arquitectura, calidad, gobierno). Falta definir con Edir el entorno (IDE) para Python.

@@ -16,11 +16,13 @@
     sim: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>',
     err: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L2 18a2 2 0 001.7 3h16.6a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>',
     colab: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>',
+    gym: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12"/></svg>',
+    tool: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><path d="M10 6.5h4a3 3 0 013 3V14M7 10v4a3 3 0 003 3h4"/></svg>',
     me: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>',
   };
 
   /* ------------------------------------------------------------ colores por tema */
-  const CAT_COLOR = { dato: "var(--sky)", leer: "var(--teal)", resumir: "var(--gold)", unir: "var(--coral)", agrupar: "var(--orange)", sub: "var(--fuchsia)", ddl: "var(--mint)", dml: "var(--rose)", model: "var(--lavender)", py: "var(--cyan)" };
+  const CAT_COLOR = { dato: "var(--sky)", leer: "var(--teal)", resumir: "var(--gold)", unir: "var(--coral)", agrupar: "var(--orange)", sub: "var(--fuchsia)", ddl: "var(--mint)", dml: "var(--rose)", model: "var(--lavender)", py: "var(--cyan)", func: "var(--cyan)", vent: "var(--pink)", nulo: "var(--peach)", metodo: "var(--olive)", otros: "var(--rose)" };
   const CICLO = ["var(--amber)", "var(--teal)", "var(--coral)", "var(--lavender)", "var(--mint)", "var(--rose)", "var(--sky)", "var(--gold)", "var(--fuchsia)", "var(--orange)", "var(--cyan)", "var(--lime)"];
   const TOPIC_COLOR = (t) => { let h = 0; for (const c of String(t || "x")) h = (h * 31 + c.charCodeAt(0)) >>> 0; return CICLO[h % CICLO.length]; };
   const tono = (c) => `style="--c:${c}"`;
@@ -36,7 +38,7 @@
   });
 
   /* ------------------------------------------------------------ shell */
-  const RUTAS = [["#/", "Inicio", ico.home], ["#/semana/1", "Semanas", ico.book], ["#/ref", "Referencia rápida", ico.ref], ["#/lab", "Laboratorio SQL", ico.lab], ["#/repaso", "Repaso diario", ico.rep], ["#/simulacro", "Simulacro Pa1", ico.sim], ["#/errores", "Mis errores", ico.err], ["#/colab", "Puente a Colab", ico.colab], ["#/perfil", "Mi progreso", ico.me]];
+  const RUTAS = [["#/", "Inicio", ico.home], ["#/semana/1", "Semanas", ico.book], ["#/ref", "Referencia rápida", ico.ref], ["#/lab", "Laboratorio SQL", ico.lab], ["#/retos", "Gimnasio de retos", ico.gym], ["#/taller", "Taller de modelado", ico.tool], ["#/repaso", "Repaso diario", ico.rep], ["#/simulacro", "Simulacro Pa1", ico.sim], ["#/errores", "Mis errores", ico.err], ["#/colab", "Puente a Colab", ico.colab], ["#/perfil", "Mi progreso", ico.me]];
   function shell() {
     document.body.innerHTML = `<div class="app"><aside class="side" id="side"><div class="brand"><i>FGD</i><div>FGD-Edir<small>Fundamentos de Gestión de Datos</small></div></div>
       <nav class="nav" id="nav"></nav><div class="me" id="me"></div></aside>
@@ -47,7 +49,7 @@
   }
   function pintaNav() {
     const h = location.hash || "#/";
-    $("#nav").innerHTML = RUTAS.map((r, i) => (i === 1 ? '<div class="sep">Estudiar</div>' : i === 6 ? '<div class="sep">Tú</div>' : "") + `<a href="${r[0]}" class="${(h === r[0]) || (r[0] !== "#/" && h.startsWith(r[0].replace(/\/\d+$/, ""))) ? "on" : ""}">${r[2]}${r[1]}</a>`).join("");
+    $("#nav").innerHTML = RUTAS.map((r, i) => (r[0] === "#/semana/1" ? '<div class="sep">Estudiar</div>' : r[0] === "#/repaso" ? '<div class="sep">Practicar</div>' : r[0] === "#/errores" ? '<div class="sep">Tú</div>' : "") + `<a href="${r[0]}" class="${(h === r[0]) || (r[0] !== "#/" && h.startsWith(r[0].replace(/\/\d+$/, ""))) ? "on" : ""}">${r[2]}${r[1]}</a>`).join("");
     const n = store.nivel(), S = store.get();
     $("#me").innerHTML = `<div class="row"><b style="font-family:var(--head)">Nivel ${n.i}</b><span class="sp"></span><span class="chip amber">${S.xp} XP</span></div><div class="muted" style="font-size:13px;margin:2px 0 8px">${n.nombre}</div>${barra(n.pct, "amber")}<div class="row" style="margin-top:8px;font-size:13px"><span><span class="flame">🔥</span> <b>${S.racha.n}</b> día(s)</span><span class="sp"></span><span class="muted">${store.vencidas().length} por repasar</span></div>`;
     const c = $("#xpchip"); if (c) c.textContent = "Nv " + n.i + " · " + S.xp + " XP";
@@ -61,7 +63,7 @@
     const h = (location.hash || "#/").slice(1).split("/").filter(Boolean);
     const v = h[0] || "inicio"; pintaNav();
     window.scrollTo(0, 0);
-    ({ inicio: vInicio, semana: vSemana, leccion: vLeccion, ref: vRef, lab: vLab, repaso: vRepaso, practica: vPractica, simulacro: vSimulacro, errores: vErrores, colab: vColab, perfil: vPerfil }[v] || vInicio)(h.slice(1));
+    ({ inicio: vInicio, semana: vSemana, leccion: vLeccion, ref: vRef, lab: vLab, repaso: vRepaso, practica: vPractica, simulacro: vSimulacro, retos: vRetos, reto: vReto, taller: vTaller, tarea: vTarea, errores: vErrores, colab: vColab, perfil: vPerfil }[v] || vInicio)(h.slice(1));
     $("#side").classList.remove("open");
   }
 
@@ -84,7 +86,10 @@
       <h2 class="h2">Atajos para el examen</h2>
       <div class="grid g3"><a class="card hover" href="#/ref" style="color:inherit"><b>🔎 Referencia rápida</b><p class="muted" style="margin-top:4px">Cada comando: qué hace, sintaxis, ejemplo y trampa típica. Busca en 2 segundos.</p></a>
         <a class="card hover" href="#/lab" style="color:inherit"><b>🧪 Laboratorio SQL</b><p class="muted" style="margin-top:4px">Escribe consultas y ve el resultado al instante, sin Colab.</p></a>
-        <a class="card hover" href="#/simulacro" style="color:inherit"><b>🎯 Simulacro Pa1</b><p class="muted" style="margin-top:4px">45 minutos, una sola oportunidad, como el examen real.</p></a></div>
+        <a class="card hover" href="#/simulacro" style="color:inherit"><b>🎯 Simulacro Pa1</b><p class="muted" style="margin-top:4px">45 minutos, una sola oportunidad, como el examen real.</p></a>
+        <a class="card hover" href="#/retos" style="color:inherit"><b>🏋️ Gimnasio de retos</b><p class="muted" style="margin-top:4px">${FGD.retos.length} ejercicios de SQL con corrección automática. Aquí se aprende escribiendo.</p></a>
+        <a class="card hover" href="#/taller" style="color:inherit"><b>📐 Taller de modelado</b><p class="muted" style="margin-top:4px">Diseña tablas desde reglas de negocio y la web revisa tus claves y relaciones.</p></a>
+        <a class="card hover" href="#/leccion/c4-repaso" style="color:inherit"><b>🗺️ Mapa completo de SQL</b><p class="muted" style="margin-top:4px">Todo lo que dominas, qué lección lo explica y cómo cambia SQL en otros motores.</p></a></div>
       <div class="card" style="margin-top:14px"><b>Cómo usar esto sin olvidar</b><ol class="muted" style="margin:8px 0 0 20px"><li>Lee una lección y ejecuta cada ejemplo (cámbialo y rómpelo).</li><li>Haz la <b>misión diaria</b>: la web te vuelve a preguntar lo que fallaste a los 1, 3, 7 y 14 días.</li><li>Antes del examen: <b>simulacro</b> y repasa tu cuaderno de errores.</li></ol></div>`;
   }
 
@@ -94,7 +99,9 @@
     main().innerHTML = `<div class="tabs" style="margin-bottom:14px">${FGD.semanas.map((x) => `<a class="tab ${x.n === n ? "on" : ""}" href="#/semana/${x.n}">Semana ${x.n}</a>`).join("")}</div>
       <div class="kicker" style="color:${w.color}">Semana ${n}</div><h1 class="h1">${esc(w.titulo)}</h1><p class="lead">${esc(w.resumen)}</p>
       <div class="row" style="margin:14px 0"><a class="btn primary" href="#/practica/s${n}">▶ Practicar semana ${n}</a><a class="btn" href="#/ref">Referencia rápida</a><span class="sp"></span><span class="chip">Dominio ${Math.round(p.dom * 100)}%</span></div>
-      <div class="grid auto">${leccionesDe(n).map((l, i) => `<a class="card hover" href="#/leccion/${l.id}" style="color:inherit;border-top:4px solid ${CICLO[(n * 3 + i) % CICLO.length]}"><div class="row"><span class="chip">${i + 1}</span><span class="sp"></span>${S.hechas[l.id] ? '<span class="chip lime">✔ hecha</span>' : `<span class="chip">${l.min} min</span>`}</div><h3 style="margin:10px 0 4px;font-size:18px">${esc(l.titulo)}</h3><p class="muted" style="font-size:14px">${l.bloques.filter((b) => b.t === "try").length} ejemplos ejecutables · ${l.bloques.filter((b) => b.t === "diagram").length} diagramas</p></a>`).join("")}</div>
+      ${(() => { const tarjeta = (l, i) => `<a class="card hover" href="#/leccion/${l.id}" style="color:inherit;border-top:4px solid ${CICLO[(n * 3 + i) % CICLO.length]}"><div class="row"><span class="chip">${l.comp ? "Complemento" : i + 1}</span><span class="sp"></span>${S.hechas[l.id] ? '<span class="chip lime">✔ hecha</span>' : `<span class="chip">${l.min} min</span>`}</div><h3 style="margin:10px 0 4px;font-size:18px">${esc(l.titulo)}</h3><p class="muted" style="font-size:14px">${l.bloques.filter((b) => b.t === "try").length} ejemplos ejecutables · ${l.bloques.filter((b) => b.t === "diagram").length} diagramas</p></a>`;
+        const base = leccionesDe(n).filter((l) => !l.comp), comp = leccionesDe(n).filter((l) => l.comp);
+        return `<h2 class="h2 tone" style="--c:var(--amber)">Lo que se ve en clase</h2><div class="grid auto">${base.map(tarjeta).join("")}</div>` + (comp.length ? `<h2 class="h2 tone" style="--c:var(--mint)">Complementos para dominar SQL</h2><p class="muted" style="margin:-4px 0 12px">Lo que va más allá de la clase y que necesitarás en Big Data y Ciencia de Datos.</p><div class="grid auto">${comp.map((l, i) => tarjeta(l, i + 5)).join("")}</div>` : ""); })()}
       ${n === 4 ? `<div class="callout exam" style="margin-top:18px"><span class="ic">🎯</span><div><b>Pa1 abarca semanas 1 a 4</b>Prueba de aula de 45 minutos, una sola oportunidad. Cuando termines las 4 semanas, haz el <a href="#/simulacro">simulacro</a>.</div></div>` : ""}`;
   }
 
@@ -140,7 +147,7 @@
     const l = FGD.lecciones.find((x) => x.id === a[0]); if (!l) return vInicio();
     const w = FGD.semanas.find((x) => x.n === l.sem), idx = FGD.lecciones.indexOf(l), prev = FGD.lecciones[idx - 1], next = FGD.lecciones[idx + 1], S = store.get();
     h2n = FGD.lecciones.indexOf(l);
-    main().innerHTML = `<div class="lesson"><a class="muted" href="#/semana/${l.sem}">← Semana ${l.sem} · ${esc(w.titulo)}</a><div class="kicker" style="margin-top:10px;color:${w.color}">Lección ${leccionesDe(l.sem).indexOf(l) + 1} · ${l.min} min</div><h1 class="h1">${esc(l.titulo)}</h1>
+    main().innerHTML = `<div class="lesson"><a class="muted" href="#/semana/${l.sem}">← Semana ${l.sem} · ${esc(w.titulo)}</a><div class="kicker" style="margin-top:10px;color:${w.color}">${l.comp ? "Complemento" : "Lección " + (leccionesDe(l.sem).filter((x) => !x.comp).indexOf(l) + 1)} · ${l.min} min</div><h1 class="h1">${esc(l.titulo)}</h1>
       ${l.bloques.map(bloque).join("")}
       <hr><div class="card"><b>¿Listo?</b> <span class="muted">Marca la lección y practica lo aprendido.</span><div class="row" style="margin-top:12px"><button class="btn primary" id="hecha">${S.hechas[l.id] ? "✔ Lección completada" : "✔ Marcar como hecha (+20 XP)"}</button><a class="btn" href="#/practica/s${l.sem}">Practicar semana ${l.sem}</a>${next ? `<a class="btn" href="#/leccion/${next.id}">Siguiente: ${esc(next.titulo)} →</a>` : ""}</div></div>${prev ? `<p style="margin-top:14px"><a class="muted" href="#/leccion/${prev.id}">← ${esc(prev.titulo)}</a></p>` : ""}</div>`;
     activaTry(main());
@@ -391,14 +398,23 @@
     const imp = `import sqlite3, pandas as pd\n\nBASE = "${REPO}"\nconexion = sqlite3.connect(":memory:")\n\nfor t in ["ventas", "clientes", "productos", "pedidos", "detalles_pedido"]:\n    df = pd.read_csv(BASE + f"chasqui_{t}.csv")\n    df.to_sql(t, conexion, index=False)\n\npd.read_sql_query("SELECT * FROM ventas LIMIT 5;", conexion)`;
     const imp2 = `import urllib.request, sqlite3, pandas as pd\n\nurl = "${REPO}chasqui_tech.db"\nurllib.request.urlretrieve(url, "chasqui_tech.db")\nconexion = sqlite3.connect("chasqui_tech.db")\n\npd.read_sql_query("SELECT name FROM sqlite_master WHERE type='table';", conexion)`;
     const yak = `import sqlite3, pandas as pd\n\nBASE = "${REPO}"\nconexion = sqlite3.connect(":memory:")\nfor t in ["categorias", "productos", "clientes", "locales", "ventas", "ventas_original"]:\n    pd.read_csv(BASE + f"yaku_{t}.csv").to_sql(t, conexion, index=False)\n\npd.read_sql_query("SELECT * FROM ventas_original LIMIT 5;", conexion)`;
+    const andes = `import sqlite3, pandas as pd
+
+BASE = "${REPO}"
+conexion = sqlite3.connect(":memory:")
+for t in ["departamentos", "empleados", "proyectos", "ventas"]:
+    pd.read_csv(BASE + f"andes_{t}.csv").to_sql(t, conexion, index=False)
+
+pd.read_sql_query("SELECT * FROM empleados LIMIT 5;", conexion)`;
     const pat = `consulta = """\nSELECT sede, SUM(monto) AS ingreso\nFROM ventas\nGROUP BY sede\nORDER BY ingreso DESC;\n"""\npd.read_sql_query(consulta, conexion)`;
     main().innerHTML = `<div class="kicker">Practica donde ya practicas</div><h1 class="h1">Puente a Google Colab</h1><p class="lead">Los mismos datos de esta web están en el repositorio como CSV y .db. Pega una celda en Colab y listo.</p>
       <div class="callout trap"><span class="ic">⚠️</span><div><b>Antes de usarlo</b>Los enlaces funcionan cuando el repositorio <code>EdirGonzano/fgd-edir</code> esté publicado en GitHub (carpeta <code>datos/</code>). Si cambias el nombre del repositorio, cambia <code>BASE</code>.</div></div>
       <h2 class="h2">1 · Chasqui Tech (semanas 2 y 3) — desde CSV</h2>${sql.bloque(imp, "Celda de Colab")}
       <h2 class="h2">2 · Chasqui Tech — descargando el archivo .db</h2>${sql.bloque(imp2, "Celda de Colab")}
       <h2 class="h2">3 · Café Yaku (semana 4)</h2>${sql.bloque(yak, "Celda de Colab")}
-      <h2 class="h2">4 · El patrón de la clase</h2><p class="muted">Escribe el SQL en una variable con comillas triples y muéstralo con pandas.</p>${sql.bloque(pat, "Patrón consulta + read_sql_query")}
-      <h2 class="h2">Archivos disponibles</h2><div class="card muted" style="font-size:14px;line-height:1.9"><span class="mono">chasqui_ventas.csv · chasqui_clientes.csv · chasqui_productos.csv · chasqui_pedidos.csv · chasqui_detalles_pedido.csv · chasqui_tech.db<br>yaku_categorias.csv · yaku_productos.csv · yaku_clientes.csv · yaku_locales.csv · yaku_ventas.csv · yaku_ventas_original.csv · cafe_yaku.db</span></div>`;
+      <h2 class="h2">4 · Andes Soft (cierre de SQL: empleados, jefes, proyectos, ventas)</h2>${sql.bloque(andes, "Celda de Colab")}
+      <h2 class="h2">5 · El patrón de la clase</h2><p class="muted">Escribe el SQL en una variable con comillas triples y muéstralo con pandas.</p>${sql.bloque(pat, "Patrón consulta + read_sql_query")}
+      <h2 class="h2">Archivos disponibles</h2><div class="card muted" style="font-size:14px;line-height:1.9"><span class="mono">chasqui_ventas.csv · chasqui_clientes.csv · chasqui_productos.csv · chasqui_pedidos.csv · chasqui_detalles_pedido.csv · chasqui_tech.db<br>yaku_categorias.csv · yaku_productos.csv · yaku_clientes.csv · yaku_locales.csv · yaku_ventas.csv · yaku_ventas_original.csv · cafe_yaku.db<br>andes_departamentos.csv · andes_empleados.csv · andes_proyectos.csv · andes_ventas.csv · andes_soft.db</span></div>`;
   }
 
   /* ------------------------------------------------------------ PERFIL */
@@ -414,6 +430,123 @@
     $("#exp").onclick = () => { const blob = new Blob([store.exportar()], { type: "application/json" }), a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "fgd-edir-progreso.json"; a.click(); };
     $("#imp").onclick = () => { const b = $("#box"); if (b.style.display === "none") { b.style.display = "block"; return; } store.importar(b.value) ? (store.toast("Progreso importado"), vPerfil()) : store.toast("Respaldo no válido"); };
     $("#rs").onclick = () => { if (confirm("¿Borrar TODO tu progreso? No se puede deshacer.")) { store.reiniciar(); vPerfil(); } };
+  }
+
+  /* ------------------------------------------------------------ GIMNASIO DE RETOS */
+  const ESTRELLAS = (n) => "★".repeat(n) + "☆".repeat(3 - n), NIVEL_TXT = ["", "Calentamiento", "Entrenamiento", "Reto"];
+  function vRetos() {
+    const S = store.get(), hechos = FGD.retos.filter((r) => S.retos[r.id]).length, tot = FGD.retos.length;
+    const sig = FGD.retos.find((r) => !S.retos[r.id]);
+    main().innerHTML = `<div class="kicker">Aprende escribiendo SQL</div><h1 class="h1">Gimnasio de retos</h1><p class="lead">${tot} ejercicios con corrección automática: escribes la consulta, la web la ejecuta y la compara con la solución. Si te atascas, hay pista y solución comentada.</p>
+      <div class="card" style="margin:14px 0"><div class="row"><b>${hechos} de ${tot} retos resueltos</b><span class="sp"></span>${sig ? `<a class="btn primary" href="#/reto/${sig.id}">▶ Siguiente reto</a>` : '<span class="chip lime">¡Completaste todos!</span>'}</div>${barra(hechos / tot)}</div>
+      ${FGD.retosTemas.map(([k, nombre, color]) => { const rs = FGD.retos.filter((r) => r.tema === k); if (!rs.length) return ""; return `<h2 class="h2 tone" style="--c:${color}">${nombre} <span class="muted" style="font-size:14px;font-weight:600">· ${rs.filter((r) => S.retos[r.id]).length}/${rs.length}</span></h2><div class="grid auto">${rs.map((r) => `<a class="card hover tone" style="--c:${color};color:inherit;padding:14px 16px" href="#/reto/${r.id}"><div class="row"><span class="mono dim">${r.id.toUpperCase()}</span><span class="sp"></span><span style="color:var(--gold);letter-spacing:2px" title="${NIVEL_TXT[r.nivel]}">${ESTRELLAS(r.nivel)}</span></div><p style="margin:8px 0;font-size:14.5px;line-height:1.45">${esc(r.enun)}</p><div class="row"><span class="chip">${FGD.datasets[r.db].nombre}</span><span class="sp"></span>${S.retos[r.id] ? '<span class="chip lime">✔ resuelto</span>' : ""}</div></a>`).join("")}</div>`; }).join("")}`;
+  }
+  async function vReto(a) {
+    const r = FGD.retos.find((x) => x.id === a[0]); if (!r) return vRetos();
+    const idx = FGD.retos.indexOf(r), sig = FGD.retos[idx + 1], ant = FGD.retos[idx - 1], tema = FGD.retosTemas.find((t) => t[0] === r.tema), S = store.get();
+    let intentos = 0;
+    main().innerHTML = `<div class="qwrap" style="max-width:860px"><a class="muted" href="#/retos">← Gimnasio de retos</a>
+      <div class="row" style="margin:10px 0 4px"><span class="chip tone" style="--c:${tema[2]}">${tema[1]}</span><span style="color:var(--gold);letter-spacing:2px">${ESTRELLAS(r.nivel)}</span><span class="chip">${NIVEL_TXT[r.nivel]}</span>${S.retos[r.id] ? '<span class="chip lime">✔ resuelto</span>' : ""}</div>
+      <h1 class="h1" style="font-size:clamp(20px,3vw,28px)">${esc(r.enun)}</h1>
+      <div class="card" style="margin:12px 0;padding:12px 14px"><div class="row" style="font-size:13.5px"><b>${FGD.datasets[r.db].nombre}</b><span class="muted">· tablas:</span>${Object.keys(FGD.datasets[r.db].tablas).map((t) => `<details style="display:inline-block"><summary class="chip" style="cursor:pointer;list-style:none">${t}</summary><div class="mono muted" style="font-size:12px;padding:6px 4px">${FGD.datasets[r.db].tablas[t].join("<br>")}</div></details>`).join("")}</div></div>
+      <textarea class="ed" id="ans" spellcheck="false" rows="7" placeholder="Escribe tu SQL aquí… (Ctrl+Enter para comprobar)"></textarea>
+      <div class="row" style="margin:10px 0"><button class="btn primary" id="chk">✔ Comprobar</button><button class="btn sm" id="prev">▶ Probar</button><button class="btn sm" id="hint">💡 Pista</button><button class="btn sm" id="sol" style="display:none">👁 Ver solución</button></div><div id="pv"></div><div id="fb"></div>
+      <div class="row" style="margin-top:16px">${ant ? `<a class="btn sm" href="#/reto/${ant.id}">← ${ant.id.toUpperCase()}</a>` : ""}<span class="sp"></span>${sig ? `<a class="btn sm" id="next" href="#/reto/${sig.id}">${sig.id.toUpperCase()} →</a>` : ""}</div></div>`;
+    const ta = $("#ans"); ta.focus();
+    ta.addEventListener("keydown", (e) => { if (e.key === "Tab") { e.preventDefault(); const p = ta.selectionStart; ta.value = ta.value.slice(0, p) + "  " + ta.value.slice(ta.selectionEnd); ta.selectionStart = ta.selectionEnd = p + 2; } if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); $("#chk").click(); } });
+    const ejecutar = (txt) => sql.correr(r.db, r.check ? txt.replace(/;\s*$/, "") + ";\n" + r.check : txt, true);
+    $("#prev").onclick = async () => { $("#pv").innerHTML = sql.tabla(await ejecutar(ta.value), 20); store.labRun(); };
+    $("#hint").onclick = () => { $("#pv").innerHTML = `<div class="callout tip"><span class="ic">💡</span><div><b>Pista</b>${esc(r.pista)}</div></div>`; };
+    const mostrarSol = async () => { const sol = await ejecutar(r.sol); $("#pv").innerHTML = `<div class="muted" style="margin:6px 0">Una solución posible</div>${sql.bloque(r.sol.replace(/; /g, ";\n"), "")}<div class="muted" style="margin:8px 0 4px">Su resultado${r.check ? " (estado final)" : ""}</div>${sql.tabla(sol, 8)}`; };
+    $("#sol").onclick = mostrarSol;
+    $("#chk").onclick = async (e) => {
+      if (!ta.value.trim()) return store.toast("Escribe tu consulta primero");
+      $("#chk").disabled = true; const mio = await ejecutar(ta.value), sol = await ejecutar(r.sol); $("#chk").disabled = false; intentos++;
+      const ok = sql.iguales(mio, sol, r.ordered || /order by/i.test(r.sol));
+      if (ok) { const nuevo = store.marcarReto(r.id, r.nivel, e); $("#fb").innerHTML = `<div class="feedback ok"><b>✔ ¡Correcto!</b> ${nuevo ? "Reto resuelto." : "Ya lo habías resuelto."}</div>`; await mostrarSol(); }
+      else {
+        const motivo = mio.error ? "Tu SQL tiene un error: " + mio.error : mio.cols.length !== sol.cols.length ? `Devolviste ${mio.cols.length} columna(s) y se esperaban ${sol.cols.length}.` : mio.rows.length !== sol.rows.length ? `Devolviste ${mio.rows.length} fila(s) y se esperaban ${sol.rows.length}.` : "Tienes el número correcto de filas y columnas, pero algunos valores (o el orden) no coinciden.";
+        $("#fb").innerHTML = `<div class="feedback bad"><b>✘ Aún no.</b> ${esc(motivo)}<div class="muted" style="margin-top:6px">Usa «Probar» para ver tu resultado, «Pista» si te atascas.</div></div>`;
+        if (intentos >= 2) $("#sol").style.display = "";
+      }
+    };
+  }
+
+  /* ------------------------------------------------------------ TALLER DE MODELADO */
+  function erDeSpec(spec) {
+    const W = 190, GX = 80, GY = 36, nombres = Object.keys(spec.tablas), nivel = {};
+    const niv = (n, vis) => { if (nivel[n] !== undefined) return nivel[n]; const refs = Object.values(spec.tablas[n].fk || {}).filter((x) => x !== n); nivel[n] = refs.length ? 1 + Math.max(...refs.map((x) => niv(x))) : 0; return nivel[n]; };
+    nombres.forEach((n) => niv(n));
+    const alto = {}, tablas = []; const colores = [C_SKY, C_TEAL, C_AMBER, C_CORAL, C_LAV, C_MINT];
+    nombres.forEach((n, i) => { const l = nivel[n]; const y = alto[l] || 20; alto[l] = y + 30 + spec.tablas[n].cols.length * 22 + GY;
+      const ts = spec.tablas[n]; tablas.push({ n, x: 20 + l * (W + GX), y, c: colores[i % colores.length], cols: ts.cols.map((c) => [c, ts.pk.includes(c) ? "PK" : (ts.fk || {})[c] ? "FK" : ""]) }); });
+    const pos = Object.fromEntries(tablas.map((t) => [t.n, t])), enlaces = [];
+    nombres.forEach((b) => Object.entries(spec.tablas[b].fk || {}).forEach(([col, ref]) => {
+      const A = pos[ref], B = pos[b]; if (!A || !B) return;
+      const ia = Math.max(0, spec.tablas[ref].cols.indexOf(spec.tablas[ref].pk[0])), ib = spec.tablas[b].cols.indexOf(col);
+      if (A.x < B.x) enlaces.push({ a: ref, ia, sa: "r", b, ib, sb: "l", mx: (A.x + W + B.x) / 2 });
+      else if (A.x > B.x) enlaces.push({ a: ref, ia, sa: "l", b, ib, sb: "r", mx: (B.x + W + A.x) / 2 });
+      else enlaces.push({ a: ref, ia, sa: "r", b, ib, sb: "r", mx: A.x + W + 34 });
+    }));
+    const ancho = (Math.max(...Object.values(nivel)) + 1) * (W + GX) + 30, altoMax = Math.max(...Object.values(alto)) + 10;
+    return FGD.erSVG(tablas, enlaces, ancho, altoMax);
+  }
+  const C_SKY = "#4db8ff", C_TEAL = "#00c2b8", C_AMBER = "#ffb400", C_CORAL = "#ff5a4e", C_LAV = "#b6a0ff", C_MINT = "#5ce1a5";
+  async function revisarTaller(t, ddl) {
+    const d = await sql.vacia(), out = [];
+    try { d.exec("PRAGMA foreign_keys = ON;"); d.exec(ddl); out.push([true, "Tu código SQL se ejecuta sin errores"]); } catch (e) { d.close(); return [[false, "Error de SQL: " + e.message]]; }
+    const val = (q) => (d.exec(q)[0] || { values: [] }).values;
+    const tablas = val("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").map((v) => v[0].toLowerCase());
+    for (const [tn, ts] of Object.entries(t.spec.tablas)) {
+      if (!tablas.includes(tn)) { out.push([false, `Falta la tabla «${tn}»`]); continue; }
+      const info = val(`PRAGMA table_info(${tn})`), cols = info.map((r) => r[1].toLowerCase()), faltan = ts.cols.filter((c) => !cols.includes(c));
+      out.push([!faltan.length, faltan.length ? `«${tn}»: faltan las columnas ${faltan.join(", ")}` : `«${tn}»: tiene las columnas esperadas`]);
+      const pk = info.filter((r) => r[5] > 0).map((r) => r[1].toLowerCase()).sort().join(), pkEsp = ts.pk.slice().sort().join();
+      out.push([pk === pkEsp, pk === pkEsp ? `«${tn}»: clave primaria correcta (${ts.pk.join(", ")})` : `«${tn}»: la clave primaria debería ser (${ts.pk.join(", ")})`]);
+      const fkl = val(`PRAGMA foreign_key_list(${tn})`);
+      for (const [col, ref] of Object.entries(ts.fk || {})) { const ok = fkl.some((r) => r[3].toLowerCase() === col && r[2].toLowerCase() === ref); out.push([ok, ok ? `«${tn}.${col}» apunta a «${ref}»` : `«${tn}.${col}» debe ser clave foránea hacia «${ref}»`]); }
+      const uCols = val(`PRAGMA index_list(${tn})`).filter((r) => r[2] === 1).map((r) => val(`PRAGMA index_info(${r[1]})`).map((x) => x[2].toLowerCase()).sort().join());
+      for (const u of ts.unique || []) { const k = u.slice().sort().join(), ok = uCols.includes(k) || pkEsp === k; out.push([ok, ok ? `«${tn}.${u.join(", ")}» es UNIQUE` : `«${tn}.${u.join(", ")}» debe ser UNIQUE`]); }
+    }
+    for (const p of t.spec.pruebas || []) {
+      let evaluable = true; try { for (const s of p.setup || []) d.exec(s); } catch (e) { evaluable = false; }
+      if (!evaluable) { out.push([null, p.desc + " — no se pudo evaluar (tus tablas no aceptaron los datos de prueba)"]); continue; }
+      let fallo = false; try { d.exec(p.bad); } catch (e) { fallo = true; }
+      out.push([fallo, p.desc + (fallo ? "" : " — tu diseño lo está permitiendo y no debería")]);
+    }
+    d.close(); return out;
+  }
+  function vTaller() {
+    const S = store.get(), hechos = FGD.taller.filter((t) => S.taller[t.id]).length;
+    main().innerHTML = `<div class="kicker">Diseña como profesional</div><h1 class="h1">Taller de modelado</h1><p class="lead">Te doy reglas de negocio; tú escribes el <code class="inline">CREATE TABLE</code>. La web <b>comprueba tu diseño</b>: tablas, columnas, claves primarias y foráneas, UNIQUE y que la base rechace datos inválidos.</p>
+      <div class="card" style="margin:14px 0"><b>${hechos} de ${FGD.taller.length} diseños aprobados</b>${barra(hechos / FGD.taller.length)}</div>
+      <div class="grid auto">${FGD.taller.map((t) => `<a class="card hover tone" style="--c:${t.color};color:inherit" href="#/tarea/${t.id}"><div class="row"><span class="mono dim">${t.id.toUpperCase()}</span><span class="sp"></span><span style="color:var(--gold);letter-spacing:2px">${ESTRELLAS(t.nivel)}</span></div><h3 style="margin:8px 0 4px">${esc(t.titulo)}</h3><p class="muted" style="font-size:14px">${Object.keys(t.spec.tablas).length} tablas · ${Object.values(t.spec.tablas).reduce((n, x) => n + Object.keys(x.fk || {}).length, 0)} claves foráneas</p>${S.taller[t.id] ? '<div class="chip lime" style="margin-top:8px">✔ aprobado</div>' : ""}</a>`).join("")}</div>
+      <div class="callout tip" style="margin-top:18px"><span class="ic">💡</span><div><b>Antes de empezar</b>Repasa la lección <a href="#/leccion/c4-diseno">Cómo se diseña un modelo</a>: la receta de 8 pasos te sirve para todos los diseños.</div></div>`;
+  }
+  async function vTarea(a) {
+    const t = FGD.taller.find((x) => x.id === a[0]); if (!t) return vTaller();
+    const idx = FGD.taller.indexOf(t), sig = FGD.taller[idx + 1]; let intentos = 0;
+    main().innerHTML = `<div class="qwrap" style="max-width:900px"><a class="muted" href="#/taller">← Taller de modelado</a>
+      <div class="row" style="margin:10px 0 4px"><span class="chip tone" style="--c:${t.color}">${t.id.toUpperCase()}</span><span style="color:var(--gold);letter-spacing:2px">${ESTRELLAS(t.nivel)}</span></div>
+      <h1 class="h1" style="font-size:clamp(22px,3vw,30px)">${esc(t.titulo)}</h1>
+      <div class="card tone" style="--c:${t.color}"><b>Reglas de negocio</b><ul style="margin:8px 0 0 20px">${t.reglas.map((x) => `<li style="margin:5px 0">${x}</li>`).join("")}</ul></div>
+      <p class="muted" style="margin:12px 0 6px">Tablas que debe tener tu diseño: <span class="mono" style="color:var(--amber)">${Object.keys(t.spec.tablas).join(" · ")}</span></p>
+      <textarea class="ed" id="ddl" spellcheck="false" rows="14" placeholder="Escribe aquí tus CREATE TABLE (primero las tablas padre)…"></textarea>
+      <div class="row" style="margin:10px 0"><button class="btn primary" id="chk">✔ Comprobar diseño</button><button class="btn sm" id="hint">💡 Pista</button><button class="btn sm" id="sol" style="display:none">👁 Ver una solución</button></div><div id="pv"></div><div id="fb"></div>
+      <div class="row" style="margin-top:14px"><span class="sp"></span>${sig ? `<a class="btn sm" href="#/tarea/${sig.id}">${sig.id.toUpperCase()} →</a>` : ""}</div></div>`;
+    const ta = $("#ddl"); ta.focus();
+    ta.addEventListener("keydown", (e) => { if (e.key === "Tab") { e.preventDefault(); const p = ta.selectionStart; ta.value = ta.value.slice(0, p) + "  " + ta.value.slice(ta.selectionEnd); ta.selectionStart = ta.selectionEnd = p + 2; } });
+    $("#hint").onclick = () => { $("#pv").innerHTML = `<div class="callout tip"><span class="ic">💡</span><div><b>Pista</b>${t.pista}</div></div>`; };
+    const verSol = () => { $("#pv").innerHTML = `<div class="muted" style="margin:6px 0">Una solución posible</div>${sql.bloque(t.solucion, "DDL")}<div class="muted" style="margin:10px 0 4px">Su diagrama entidad-relación</div><div class="diagram">${erDeSpec(t.spec)}</div>`; };
+    $("#sol").onclick = verSol;
+    $("#chk").onclick = async (e) => {
+      if (!ta.value.trim()) return store.toast("Escribe tu diseño primero");
+      $("#chk").disabled = true; const res = await revisarTaller(t, ta.value); $("#chk").disabled = false; intentos++;
+      const malos = res.filter((x) => x[0] === false).length, buenos = res.filter((x) => x[0] === true).length;
+      const lista = res.map((x) => `<li style="margin:4px 0;list-style:none">${x[0] === true ? '<span style="color:var(--lime)">✔</span>' : x[0] === false ? '<span style="color:var(--coral)">✘</span>' : '<span class="dim">•</span>'} ${esc(x[1])}</li>`).join("");
+      if (!malos) { const nuevo = store.marcarTaller(t.id, e); $("#fb").innerHTML = `<div class="feedback ok"><b>🏆 ¡Diseño aprobado!</b> ${nuevo ? "+60 XP." : ""}<ul style="margin:8px 0 0">${lista}</ul></div>`; verSol(); }
+      else { $("#fb").innerHTML = `<div class="feedback bad"><b>Tu diseño cumple ${buenos} de ${buenos + malos} revisiones.</b><ul style="margin:8px 0 0">${lista}</ul></div>`; if (intentos >= 2) $("#sol").style.display = ""; }
+    };
   }
 
   /* ------------------------------------------------------------ arranque */

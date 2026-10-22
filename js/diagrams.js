@@ -238,5 +238,20 @@ window.FGD = window.FGD || {};
     dibuja();
   };
 
+  /* ---------- GROUP BY vs función de ventana ---------- */
+  D.ventana = (el) => {
+    const R = [["Cusco", "Ana", 2800], ["Cusco", "Beto", 3500], ["Cusco", "Carla", 5200], ["Lima", "Dario", 3100], ["Lima", "Elsa", 5000]];
+    const col = { Cusco: C.teal, Lima: C.amber };
+    const vistaGB = () => { const g = {}; R.forEach((r) => (g[r[0]] = (g[r[0]] || []).concat([r[2]])));
+      return `<table class="mini"><thead><tr><th>ciudad</th><th>AVG(sueldo)</th></tr></thead><tbody>${Object.keys(g).map((k) => `<tr><td style="color:${col[k]}">${k}</td><td>${(g[k].reduce((a, b) => a + b, 0) / g[k].length).toFixed(1)}</td></tr>`).join("")}</tbody></table><div class="muted" style="font-size:13px;margin-top:6px">5 filas → <b>2</b> filas. Se pierde el detalle de cada persona.</div>`; };
+    const vistaOV = () => { const g = {}; R.forEach((r) => (g[r[0]] = (g[r[0]] || []).concat([r[2]])));
+      return `<table class="mini"><thead><tr><th>ciudad</th><th>nombre</th><th>sueldo</th><th>AVG(sueldo) OVER (PARTITION BY ciudad)</th></tr></thead><tbody>${R.map((r) => `<tr><td style="color:${col[r[0]]}">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:${C.lime}">${(g[r[0]].reduce((a, b) => a + b, 0) / g[r[0]].length).toFixed(1)}</td></tr>`).join("")}</tbody></table><div class="muted" style="font-size:13px;margin-top:6px">5 filas → <b>5</b> filas. Cada persona conserva su fila y recibe el promedio de su ciudad.</div>`; };
+    el.innerHTML = caja(`<div class="joinpick"><button class="tab on" data-v="gb">GROUP BY ciudad</button><button class="tab" data-v="ov">OVER (PARTITION BY ciudad)</button></div><div class="mono" style="font-size:13px;color:#ffd878;margin-bottom:8px" id="vq"></div><div id="vt"></div>`, "GROUP BY colapsa las filas; la función de ventana calcula sobre el grupo sin colapsar.");
+    const pinta = (v) => { el.querySelector("#vq").textContent = v === "gb" ? "SELECT ciudad, AVG(sueldo) FROM empleados GROUP BY ciudad;" : "SELECT ciudad, nombre, sueldo, AVG(sueldo) OVER (PARTITION BY ciudad) FROM empleados;"; el.querySelector("#vt").innerHTML = v === "gb" ? vistaGB() : vistaOV(); };
+    el.querySelectorAll("[data-v]").forEach((b) => b.addEventListener("click", () => { el.querySelectorAll("[data-v]").forEach((x) => x.classList.toggle("on", x === b)); pinta(b.dataset.v); }));
+    pinta("gb");
+  };
+  FGD.erSVG = er;
+
   FGD.dibujar = (id, el) => (D[id] ? D[id](el) : (el.textContent = "(diagrama " + id + ")"));
 })();

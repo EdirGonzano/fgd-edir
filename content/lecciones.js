@@ -3,9 +3,9 @@ window.FGD = window.FGD || {};
 (function () {
   FGD.semanas = [
     { n: 1, color: "var(--amber)", titulo: "El dato y la gestión de datos", resumen: "Qué es un dato, cómo se vuelve conocimiento, tipos, calidad y roles.", caso: "Delivery en Lima, fraude bancario, redes sociales" },
-    { n: 2, color: "var(--teal)", titulo: "SQL básico: consultas y filtros", resumen: "SELECT, WHERE, ORDER BY, funciones de resumen y crear/modificar tablas.", caso: "Chasqui Tech: 72 ventas, 4 sedes, 2 canales" },
-    { n: 3, color: "var(--coral)", titulo: "SQL avanzado: JOIN y agrupaciones", resumen: "Unir tablas, GROUP BY, HAVING, subconsultas y vistas.", caso: "Chasqui Tech: clientes, pedidos, productos y detalles" },
-    { n: 4, color: "var(--violet)", titulo: "Modelado relacional", resumen: "Entidad-relación, cardinalidad, anomalías, 1FN-2FN-3FN y del diagrama a tablas.", caso: "Café Yaku: de una tabla gigante a un modelo limpio" },
+    { n: 2, color: "var(--teal)", titulo: "Consultas y filtros en SQL", resumen: "SELECT, WHERE, ORDER BY, funciones de resumen, crear/modificar tablas; más funciones de texto, fechas y NULL como complemento.", caso: "Chasqui Tech: 72 ventas, 4 sedes, 2 canales" },
+    { n: 3, color: "var(--coral)", titulo: "Unir y agrupar tablas", resumen: "JOIN, GROUP BY, HAVING, subconsultas y vistas; más CASE, ventanas, CTE y más JOIN como complemento.", caso: "Chasqui Tech: clientes, pedidos, productos y detalles" },
+    { n: 4, color: "var(--violet)", titulo: "Modelado relacional y cierre de SQL", resumen: "Entidad-relación, cardinalidad, 1FN-3FN, del diagrama a tablas; más diseño profesional, DDL, DML, transacciones y SQL con Python.", caso: "Café Yaku: de una tabla gigante a un modelo limpio" },
   ];
 
   FGD.lecciones = [

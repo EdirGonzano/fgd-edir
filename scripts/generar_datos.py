@@ -115,7 +115,48 @@ CREATE TABLE ventas_original (id_venta INTEGER PRIMARY KEY, fecha TEXT, cliente_
   producto_nombre TEXT, categoria_nombre TEXT, precio_unitario REAL, local_nombre TEXT, local_distrito TEXT,
   cantidad INTEGER, metodo_pago TEXT, total REAL);"""
 
+# ------------------------------------------------------------------ ANDES SOFT (empresa: empleados, departamentos, proyectos, ventas)
+DDL_ANDES = """CREATE TABLE departamentos (id_depto INTEGER PRIMARY KEY, nombre TEXT NOT NULL UNIQUE, ciudad TEXT NOT NULL);
+CREATE TABLE empleados (id_emp INTEGER PRIMARY KEY, nombre TEXT NOT NULL, cargo TEXT NOT NULL, sueldo REAL NOT NULL CHECK (sueldo > 0),
+  ciudad TEXT NOT NULL, correo TEXT, id_depto INTEGER NOT NULL, id_jefe INTEGER, fecha_ingreso TEXT NOT NULL,
+  FOREIGN KEY (id_depto) REFERENCES departamentos(id_depto), FOREIGN KEY (id_jefe) REFERENCES empleados(id_emp));
+CREATE TABLE proyectos (id_proyecto INTEGER PRIMARY KEY, nombre TEXT NOT NULL, estado TEXT NOT NULL, presupuesto REAL NOT NULL, id_depto INTEGER NOT NULL,
+  FOREIGN KEY (id_depto) REFERENCES departamentos(id_depto));
+CREATE TABLE ventas (id_venta INTEGER PRIMARY KEY, fecha TEXT NOT NULL, id_emp INTEGER NOT NULL, producto TEXT NOT NULL, monto REAL NOT NULL,
+  FOREIGN KEY (id_emp) REFERENCES empleados(id_emp));"""
+departamentos = [(1, "Sistemas", "Cusco"), (2, "Ventas", "Lima"), (3, "Finanzas", "Lima"), (4, "RRHH", "Cusco"), (5, "Marketing", "Arequipa")]
+empleados = [
+    (1, "Alicia Paucar", "Analista", 2800.0, "Cusco", "a.paucar@andes.pe", 1, 3, "2024-03-01"),
+    (2, "Marisol Cutipa", "Asistente", 2200.0, "Cusco", "m.cutipa@andes.pe", 4, 5, "2025-01-13"),
+    (3, "Jorge Quiroz", "Jefe de Sistemas", 5200.0, "Cusco", "j.quiroz@andes.pe", 1, None, "2019-05-12"),
+    (4, "Víctor Layme", "Vendedor", 3100.0, "Lima", "v.layme@andes.pe", 2, 6, "2022-08-15"),
+    (5, "Lucía Mendieta", "Jefa de RRHH", 4800.0, "Cusco", "l.mendieta@andes.pe", 4, None, "2018-02-20"),
+    (6, "Pablo Cornejo", "Jefe de Ventas", 5000.0, "Lima", "p.cornejo@andes.pe", 2, None, "2017-11-05"),
+    (7, "Rosa Tacuri", "Contadora", 3900.0, "Lima", "r.tacuri@andes.pe", 3, 9, "2021-01-18"),
+    (8, "Josué Huillca", "Programador", 3500.0, "Cusco", None, 1, 3, "2023-06-30"),
+    (9, "Elena Paredes", "Jefa de Finanzas", 5100.0, "Lima", "e.paredes@andes.pe", 3, None, "2016-09-09"),
+    (10, "Mario Salas", "Vendedor", 2900.0, "Arequipa", "m.salas@andes.pe", 2, 6, "2023-10-02"),
+    (11, "Diana Vega", "Programadora", 3700.0, "Cusco", "d.vega@andes.pe", 1, 3, "2022-04-11"),
+    (12, "Hugo Flores", "Analista de datos", 3600.0, "Lima", "h.flores@andes.pe", 1, 3, "2024-01-22"),
+]
+proyectos = [
+    (1, "Portal de clientes", "En curso", 48000.0, 1), (2, "Migración a la nube", "En curso", 85000.0, 1), (3, "Campaña de verano", "Finalizado", 22000.0, 2),
+    (4, "Auditoría anual", "En curso", 30000.0, 3), (5, "Programa de bienestar", "Pausado", 12000.0, 4), (6, "App de ventas", "Finalizado", 40000.0, 2),
+]
+ventas_a = [
+    (1, "2026-03-02", 4, "Licencia Office", 1500.0), (2, "2026-03-05", 10, "Antivirus Anual", 300.0), (3, "2026-03-09", 4, "Soporte Técnico", 800.0),
+    (4, "2026-03-15", 6, "Laptop Empresarial", 4200.0), (5, "2026-03-21", 4, "Antivirus Anual", 300.0), (6, "2026-04-01", 10, "Licencia Office", 1500.0),
+    (7, "2026-04-07", 6, "Soporte Técnico", 800.0), (8, "2026-04-12", 4, "Laptop Empresarial", 4200.0), (9, "2026-04-20", 10, "Soporte Técnico", 800.0),
+    (10, "2026-05-03", 6, "Licencia Office", 1500.0), (11, "2026-05-11", 4, "Antivirus Anual", 300.0), (12, "2026-05-25", 10, "Laptop Empresarial", 4200.0),
+]
+
 TABLAS = {
+    "andes": {
+        "departamentos": (["id_depto", "nombre", "ciudad"], departamentos),
+        "empleados": (["id_emp", "nombre", "cargo", "sueldo", "ciudad", "correo", "id_depto", "id_jefe", "fecha_ingreso"], empleados),
+        "proyectos": (["id_proyecto", "nombre", "estado", "presupuesto", "id_depto"], proyectos),
+        "ventas": (["id_venta", "fecha", "id_emp", "producto", "monto"], ventas_a),
+    },
     "chasqui": {
         "ventas": (["venta_id", "fecha_venta", "sede", "canal", "producto", "categoria", "unidades", "precio_unitario", "monto"], ventas),
         "clientes": (["id_cliente", "nombre", "ciudad", "fecha_registro"], clientes),
@@ -165,9 +206,14 @@ def sql_inserts(con, tablas):
 
 con_c = crear_db("chasqui", DDL_CHASQUI)
 con_y = crear_db("yaku", DDL_YAKU)
+con_a = crear_db("andes", DDL_ANDES)
+volcar(con_a, "andes", TABLAS["andes"])
 volcar(con_c, "chasqui", TABLAS["chasqui"])
 volcar(con_y, "yaku", list(TABLAS["yaku"]) + ["ventas_original"])
 js = "window.FGD = window.FGD || {};\nFGD.datasets = " + json.dumps({
+    "andes": {"nombre": "Andes Soft", "desc": "Empresa de software: empleados con jefe, departamentos, proyectos y ventas (ejercicios de cierre de SQL)",
+              "ddl": DDL_ANDES, "datos": sql_inserts(con_a, TABLAS["andes"]),
+              "tablas": {t: c for t, (c, _) in TABLAS["andes"].items()}},
     "chasqui": {"nombre": "Chasqui Tech", "desc": "Tienda de tecnología con 4 sedes y canal Web (semanas 2 y 3)",
                 "ddl": DDL_CHASQUI, "datos": sql_inserts(con_c, TABLAS["chasqui"]),
                 "tablas": {t: c for t, (c, _) in TABLAS["chasqui"].items()}},
@@ -179,7 +225,7 @@ js = "window.FGD = window.FGD || {};\nFGD.datasets = " + json.dumps({
 }, ensure_ascii=False, indent=1) + ";\n"
 open(os.path.join(RAIZ, "content", "datasets.js"), "w", encoding="utf-8").write(js)
 # guardar también las .db para Colab (sqlite3.connect del archivo)
-for nombre, con in (("chasqui_tech", con_c), ("cafe_yaku", con_y)):
+for nombre, con in (("chasqui_tech", con_c), ("cafe_yaku", con_y), ("andes_soft", con_a)):
     ruta = os.path.join(DATOS, nombre + ".db")
     if os.path.exists(ruta): os.remove(ruta)
     dest = sqlite3.connect(ruta); con.backup(dest); dest.close()

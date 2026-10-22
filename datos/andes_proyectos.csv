@@ -1,0 +1,7 @@
+id_proyecto,nombre,estado,presupuesto,id_depto
+1,Portal de clientes,En curso,48000.0,1
+2,Migración a la nube,En curso,85000.0,1
+3,Campaña de verano,Finalizado,22000.0,2
+4,Auditoría anual,En curso,30000.0,3
+5,Programa de bienestar,Pausado,12000.0,4
+6,App de ventas,Finalizado,40000.0,2

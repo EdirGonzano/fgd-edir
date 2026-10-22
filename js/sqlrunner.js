@@ -15,6 +15,7 @@ window.FGD = window.FGD || {};
     d.exec(ds.ddl); d.exec(ds.datos); dbs[nombre] = d; return d;
   }
   async function reiniciar(nombre) { delete dbs[nombre]; return db(nombre); }
+  async function vacia() { const SQL = await motor(); return new SQL.Database(); }
   // ejecuta una o varias sentencias; devuelve el resultado de la última que produzca filas
   async function correr(nombre, sql, copia) {
     let d = await db(nombre);
@@ -62,5 +63,5 @@ window.FGD = window.FGD || {};
   function bloque(src, titulo, extra) {
     return `<div class="code"><div class="bar2"><span>${esc(titulo || "")}</span><span class="sp"></span>${extra || ""}<button class="btn sm" data-copy>Copiar</button></div><pre><code>${resaltar(src)}</code></pre></div>`;
   }
-  FGD.sql = { db, correr, reiniciar, iguales, tabla, resaltar, bloque, esc };
+  FGD.sql = { db, correr, reiniciar, vacia, iguales, tabla, resaltar, bloque, esc };
 })();
