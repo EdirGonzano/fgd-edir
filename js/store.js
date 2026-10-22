@@ -21,7 +21,7 @@ window.FGD = window.FGD || {};
   };
   const hoy = () => new Date().toISOString().slice(0, 10);
   const dias = (iso, n) => { const d = new Date(iso + "T12:00:00"); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
-  const vacio = () => ({ xp: 0, racha: { ult: null, n: 0, mejor: 0 }, srs: {}, hechas: {}, insignias: {}, errores: [], dias: {}, sims: [], stats: { sql: 0, join: 0, lab: 0, repasos: 0 } });
+  const vacio = () => ({ xp: 0, racha: { ult: null, n: 0, mejor: 0 }, srs: {}, hechas: {}, insignias: {}, errores: [], recientes: [], dias: {}, sims: [], stats: { sql: 0, join: 0, lab: 0, repasos: 0 } });
   let S;
   try { S = Object.assign(vacio(), JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) { S = vacio(); }
   const guardar = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };

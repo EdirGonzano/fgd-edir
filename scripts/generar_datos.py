@@ -40,6 +40,8 @@ CIUDADES = ["Lima", "Arequipa", "Trujillo", "Piura", "Cusco"]
 clientes = [(i + 1, n, az.choice(CIUDADES), f"2026-0{az.randint(5, 7)}-{az.randint(1, 28):02d}") for i, n in enumerate(CLIENTES)]
 # 3 clientes sin fecha de registro (NULL) para practicar IS NULL y COUNT(col)
 clientes = [(c[0], c[1], c[2], None if c[0] in (4, 11, 20) else c[3]) for c in clientes]
+# dos clientes distintos con el MISMO nombre: la identidad es id_cliente, no el nombre (agrupar por id)
+clientes = [(c[0], "Carlos Mendoza" if c[0] in (18, 24) else c[1], c[2], c[3]) for c in clientes]
 
 PRODUCTOS = [
     (1, "Laptop 14 pulgadas", "Cómputo", 2400.0), (2, "Monitor 24 pulgadas", "Cómputo", 650.0),

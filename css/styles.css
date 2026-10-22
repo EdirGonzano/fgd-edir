@@ -3,6 +3,7 @@
   --bg: #0e1a2b; --bg2: #0a1320; --panel: #142640; --panel2: #1a3050; --line: #243c5e;
   --text: #f4f1ea; --muted: #a9b8ce; --dim: #6f819b;
   --amber: #ffb400; --teal: #00c2b8; --coral: #ff5a4e; --lime: #a6e22e; --violet: #8e6bff; --sky: #4db8ff; --orange: #ff8f3f; --pink: #f472b6;
+  --gold: #ffd84d; --mint: #5ce1a5; --cyan: #22d3ee; --blue: #6c8cff; --fuchsia: #e879f9; --rose: #ff7aa8; --lavender: #b6a0ff; --peach: #ffb38a; --ocean: #2dd4bf; --olive: #c5d86d;
   --r: 14px; --r-sm: 9px;
   --font: "Figtree", "Segoe UI", system-ui, sans-serif; --head: "Sora", "Figtree", system-ui, sans-serif;
   --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
@@ -169,3 +170,23 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 22px 0; }
   .main { padding-top: 14px; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* ---------- paleta ampliada: color por tema/categoría con --c ---------- */
+.tone { --c: var(--amber); }
+.chip.tone { color: var(--c); border-color: color-mix(in srgb, var(--c) 50%, transparent); background: color-mix(in srgb, var(--c) 15%, #0e1a2b); }
+.card.tone { border-left: 4px solid var(--c); }
+.card.tone.hover:hover { border-color: var(--c); }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--amber)); margin-right: 8px; vertical-align: middle; }
+.h2.tone::before { content: ""; display: inline-block; width: 6px; height: 1em; border-radius: 3px; background: var(--c); margin-right: 10px; vertical-align: -.12em; }
+.refc h3 { color: var(--c, var(--amber)); }
+.refc.tone { border-left: 4px solid var(--c); }
+.stat b.tone { color: var(--c); }
+.tab.tone.on { background: var(--c); border-color: var(--c); color: #10151c; }
+.tab.tone:not(.on) { border-color: color-mix(in srgb, var(--c) 45%, var(--line)); }
+.swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatches i { width: 28px; height: 28px; border-radius: 9px; background: var(--c); border: 2px solid #ffffff22; }
+
+.qtext { white-space: pre-line; }
+.opt.sel { border-color: var(--amber); background: #3a2c07; }
+.slot { display: inline-block; min-width: 76px; margin: 0 3px; padding: 1px 10px; border-radius: 8px; border: 2px dashed #5b7fb0; background: #0d1a2e; color: var(--amber); font: 700 14px var(--mono); cursor: pointer; vertical-align: baseline; }
+.slot.full { border-style: solid; border-color: var(--amber); background: #3a2c07; }

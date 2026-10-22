@@ -5,3 +5,4 @@ node_modules/
 *.pptx
 *.docx
 __pycache__/
+FGD_resumen_*.md

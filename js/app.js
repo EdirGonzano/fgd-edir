@@ -19,6 +19,11 @@
     me: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg>',
   };
 
+  /* ------------------------------------------------------------ colores por tema */
+  const CAT_COLOR = { dato: "var(--sky)", leer: "var(--teal)", resumir: "var(--gold)", unir: "var(--coral)", agrupar: "var(--orange)", sub: "var(--fuchsia)", ddl: "var(--mint)", dml: "var(--rose)", model: "var(--lavender)", py: "var(--cyan)" };
+  const CICLO = ["var(--amber)", "var(--teal)", "var(--coral)", "var(--lavender)", "var(--mint)", "var(--rose)", "var(--sky)", "var(--gold)", "var(--fuchsia)", "var(--orange)", "var(--cyan)", "var(--lime)"];
+  const TOPIC_COLOR = (t) => { let h = 0; for (const c of String(t || "x")) h = (h * 31 + c.charCodeAt(0)) >>> 0; return CICLO[h % CICLO.length]; };
+  const tono = (c) => `style="--c:${c}"`;
   /* ------------------------------------------------------------ utilidades */
   const barra = (pct, cls) => `<div class="bar ${cls || ""}"><i style="width:${Math.round(Math.min(1, Math.max(0, pct)) * 100)}%"></i></div>`;
   const barajar = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
@@ -73,7 +78,7 @@
         <div class="card mission"><div class="kicker">Misión de hoy</div><h2 style="font-size:24px;margin:6px 0">${venc ? venc + " repaso(s) esperándote" : "Tu primer reto del día"}</h2>
           <p class="muted">${hechoHoy ? `Ya sumaste ${hechoHoy} acción(es) hoy. ¡Mantén la racha!` : "Responde 8 preguntas (repasos + nuevas) y gana XP. Son ~6 minutos."}</p>
           <div class="row" style="margin-top:14px"><a class="btn primary" href="#/practica/mision">▶ Empezar misión</a>${sig ? `<a class="btn" href="#/leccion/${sig.id}">Continuar: ${esc(sig.titulo)}</a>` : ""}</div></div>
-        <div class="card"><div class="grid g2"><div class="stat"><b><span class="flame">🔥</span> ${S.racha.n}</b><span>días de racha (mejor ${S.racha.mejor})</span></div><div class="stat"><b>${S.xp}</b><span>XP · Nivel ${n.i}</span></div><div class="stat"><b>${dominadas}/${tot}</b><span>preguntas dominadas</span></div><div class="stat"><b>${venc}</b><span>repasos pendientes</span></div></div>
+        <div class="card"><div class="grid g2"><div class="stat"><b class="tone" ${tono("var(--orange)")}><span class="flame">🔥</span> ${S.racha.n}</b><span>días de racha (mejor ${S.racha.mejor})</span></div><div class="stat"><b class="tone" ${tono("var(--gold)")}>${S.xp}</b><span>XP · Nivel ${n.i}</span></div><div class="stat"><b class="tone" ${tono("var(--mint)")}>${dominadas}/${tot}</b><span>preguntas dominadas</span></div><div class="stat"><b class="tone" ${tono("var(--cyan)")}>${venc}</b><span>repasos pendientes</span></div></div>
           <div class="muted" style="font-size:13px;margin:12px 0 6px">${n.nombre}${n.hasta ? " → faltan " + (n.hasta - S.xp) + " XP" : ""}</div>${barra(n.pct, "amber")}</div></div>
       <h2 class="h2">Tu camino</h2><div class="path">${FGD.semanas.map((w) => { const p = progSem(w.n); return `<a class="card hover wk" href="#/semana/${w.n}" style="color:inherit"><div class="n" style="background:${w.color}">${w.n}</div><div><h3>${esc(w.titulo)}</h3><p>${esc(w.resumen)}</p><div class="dim" style="font-size:12.5px;margin-top:2px">Caso: ${esc(w.caso)}</div></div><div style="min-width:150px"><div class="row" style="font-size:12.5px"><span class="muted">Lecciones</span><span class="sp"></span><b>${Math.round(p.lec * 100)}%</b></div>${barra(p.lec)}<div class="row" style="font-size:12.5px;margin-top:6px"><span class="muted">Dominio</span><span class="sp"></span><b>${Math.round(p.dom * 100)}%</b></div>${barra(p.dom, "amber")}</div></a>`; }).join("")}</div>
       <h2 class="h2">Atajos para el examen</h2>
@@ -89,16 +94,17 @@
     main().innerHTML = `<div class="tabs" style="margin-bottom:14px">${FGD.semanas.map((x) => `<a class="tab ${x.n === n ? "on" : ""}" href="#/semana/${x.n}">Semana ${x.n}</a>`).join("")}</div>
       <div class="kicker" style="color:${w.color}">Semana ${n}</div><h1 class="h1">${esc(w.titulo)}</h1><p class="lead">${esc(w.resumen)}</p>
       <div class="row" style="margin:14px 0"><a class="btn primary" href="#/practica/s${n}">▶ Practicar semana ${n}</a><a class="btn" href="#/ref">Referencia rápida</a><span class="sp"></span><span class="chip">Dominio ${Math.round(p.dom * 100)}%</span></div>
-      <div class="grid auto">${leccionesDe(n).map((l, i) => `<a class="card hover" href="#/leccion/${l.id}" style="color:inherit;border-top:4px solid ${w.color}"><div class="row"><span class="chip">${i + 1}</span><span class="sp"></span>${S.hechas[l.id] ? '<span class="chip lime">✔ hecha</span>' : `<span class="chip">${l.min} min</span>`}</div><h3 style="margin:10px 0 4px;font-size:18px">${esc(l.titulo)}</h3><p class="muted" style="font-size:14px">${l.bloques.filter((b) => b.t === "try").length} ejemplos ejecutables · ${l.bloques.filter((b) => b.t === "diagram").length} diagramas</p></a>`).join("")}</div>
+      <div class="grid auto">${leccionesDe(n).map((l, i) => `<a class="card hover" href="#/leccion/${l.id}" style="color:inherit;border-top:4px solid ${CICLO[(n * 3 + i) % CICLO.length]}"><div class="row"><span class="chip">${i + 1}</span><span class="sp"></span>${S.hechas[l.id] ? '<span class="chip lime">✔ hecha</span>' : `<span class="chip">${l.min} min</span>`}</div><h3 style="margin:10px 0 4px;font-size:18px">${esc(l.titulo)}</h3><p class="muted" style="font-size:14px">${l.bloques.filter((b) => b.t === "try").length} ejemplos ejecutables · ${l.bloques.filter((b) => b.t === "diagram").length} diagramas</p></a>`).join("")}</div>
       ${n === 4 ? `<div class="callout exam" style="margin-top:18px"><span class="ic">🎯</span><div><b>Pa1 abarca semanas 1 a 4</b>Prueba de aula de 45 minutos, una sola oportunidad. Cuando termines las 4 semanas, haz el <a href="#/simulacro">simulacro</a>.</div></div>` : ""}`;
   }
 
   /* ------------------------------------------------------------ LECCIÓN */
+  let h2n = 0;
   function bloque(b) {
     const callout = (cls, ic, tit) => `<div class="callout ${cls}"><span class="ic">${ic}</span><div><b>${tit}</b>${b.h}</div></div>`;
     switch (b.t) {
       case "p": return `<div class="blk"><p>${b.h}</p></div>`;
-      case "h2": return `<h2 class="h2">${b.h}</h2>`;
+      case "h2": return `<h2 class="h2 tone" ${tono(CICLO[(h2n++) % CICLO.length])}>${b.h}</h2>`;
       case "list": return `<div class="blk"><ul>${b.items.map((i) => `<li>${i}</li>`).join("")}</ul></div>`;
       case "tip": return `<div class="blk">${callout("tip", "💡", "Truco")}</div>`;
       case "trap": return `<div class="blk">${callout("trap", "⚠️", "Cuidado")}</div>`;
@@ -107,7 +113,7 @@
       case "code": return `<div class="blk">${sql.bloque(b.src, b.titulo)}</div>`;
       case "diagram": return `<div class="blk" data-diagram="${b.id}"></div>`;
       case "table": return `<div class="blk" style="overflow-x:auto"><table class="mini" style="font-size:14px;width:100%"><thead><tr>${b.head.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${b.rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-      case "refs": return `<div class="blk"><div class="muted" style="font-size:13px;margin:14px 0 6px">📚 Ficha rápida de los comandos de esta lección:</div><div class="tags">${b.ids.map((id) => { const r = FGD.ref.find((x) => x.id === id); return r ? `<a class="chip amber" href="#/ref/${id}">${esc(r.n)}</a>` : ""; }).join("")}</div></div>`;
+      case "refs": return `<div class="blk"><div class="muted" style="font-size:13px;margin:14px 0 6px">📚 Ficha rápida de los comandos de esta lección:</div><div class="tags">${b.ids.map((id) => { const r = FGD.ref.find((x) => x.id === id); return r ? `<a class="chip tone" ${tono(CAT_COLOR[r.cat])} href="#/ref/${id}">${esc(r.n)}</a>` : ""; }).join("")}</div></div>`;
       case "try": return tryBlock(b);
     }
     return "";
@@ -133,6 +139,7 @@
   function vLeccion(a) {
     const l = FGD.lecciones.find((x) => x.id === a[0]); if (!l) return vInicio();
     const w = FGD.semanas.find((x) => x.n === l.sem), idx = FGD.lecciones.indexOf(l), prev = FGD.lecciones[idx - 1], next = FGD.lecciones[idx + 1], S = store.get();
+    h2n = FGD.lecciones.indexOf(l);
     main().innerHTML = `<div class="lesson"><a class="muted" href="#/semana/${l.sem}">← Semana ${l.sem} · ${esc(w.titulo)}</a><div class="kicker" style="margin-top:10px;color:${w.color}">Lección ${leccionesDe(l.sem).indexOf(l) + 1} · ${l.min} min</div><h1 class="h1">${esc(l.titulo)}</h1>
       ${l.bloques.map(bloque).join("")}
       <hr><div class="card"><b>¿Listo?</b> <span class="muted">Marca la lección y practica lo aprendido.</span><div class="row" style="margin-top:12px"><button class="btn primary" id="hecha">${S.hechas[l.id] ? "✔ Lección completada" : "✔ Marcar como hecha (+20 XP)"}</button><a class="btn" href="#/practica/s${l.sem}">Practicar semana ${l.sem}</a>${next ? `<a class="btn" href="#/leccion/${next.id}">Siguiente: ${esc(next.titulo)} →</a>` : ""}</div></div>${prev ? `<p style="margin-top:14px"><a class="muted" href="#/leccion/${prev.id}">← ${esc(prev.titulo)}</a></p>` : ""}</div>`;
@@ -146,10 +153,10 @@
     const cats = FGD.categorias;
     main().innerHTML = `<div class="kicker">Estudia sin abrir PPT ni manuales</div><h1 class="h1">Referencia rápida</h1><p class="lead">Cada comando y concepto del curso: qué hace, sintaxis, ejemplo que puedes ejecutar y la trampa típica de examen.</p>
       <div class="sticky-top"><input type="search" id="q" placeholder="Buscar: JOIN, HAVING, 3FN, COUNT…" autocomplete="off"><div class="tabs" style="margin-top:10px" id="fsem"><button class="tab on" data-s="0">Todas</button>${[1, 2, 3, 4].map((s) => `<button class="tab" data-s="${s}">Sem ${s}</button>`).join("")}</div>
-      <div class="tabs" style="margin-top:8px" id="fcat"><button class="tab on" data-c="todas">Todo</button>${Object.keys(cats).map((c) => `<button class="tab" data-c="${c}">${cats[c]}</button>`).join("")}</div></div>
+      <div class="tabs" style="margin-top:8px" id="fcat"><button class="tab on" data-c="todas">Todo</button>${Object.keys(cats).map((c) => `<button class="tab tone" ${tono(CAT_COLOR[c])} data-c="${c}">${cats[c]}</button>`).join("")}</div></div>
       <div class="muted" id="cnt" style="margin:6px 0 10px"></div><div class="ref" id="lista"></div>`;
     const lista = $("#lista");
-    const card = (r) => `<details class="card refc" id="r-${r.id}" ${foco === r.id ? "open" : ""}><summary style="cursor:pointer;list-style:none"><div class="row"><h3>${esc(r.n)}</h3><span class="sp"></span><span class="chip">Sem ${r.sem}</span><span class="chip ${r.cat === "dato" ? "sky" : r.cat === "unir" ? "coral" : r.cat === "model" ? "violet" : r.cat === "agrupar" ? "amber" : "teal"}">${cats[r.cat]}</span></div><div class="what">${esc(r.que)}</div></summary>
+    const card = (r) => `<details class="card refc tone" ${tono(CAT_COLOR[r.cat])} id="r-${r.id}" ${foco === r.id ? "open" : ""}><summary style="cursor:pointer;list-style:none"><div class="row"><h3>${esc(r.n)}</h3><span class="sp"></span><span class="chip">Sem ${r.sem}</span><span class="chip tone" ${tono(CAT_COLOR[r.cat])}>${cats[r.cat]}</span></div><div class="what">${esc(r.que)}</div></summary>
       <div class="syn">${esc(r.syn)}</div>${r.ej ? `<div data-try-ref="${r.id}">${sql.bloque(r.ej, "Ejemplo · " + FGD.datasets[r.db].nombre, `<button class="btn sm primary" data-prueba="${r.id}">▶ Ver resultado</button>`)}<div data-out></div></div>` : ""}
       <div class="callout tip" style="margin:10px 0 0"><span class="ic">💡</span><div><b>Cuándo / nota</b>${esc(r.nota)}</div></div><div class="callout trap" style="margin:8px 0 0"><span class="ic">⚠️</span><div><b>Trampa típica</b>${esc(r.trampa)}</div></div>
       ${r.ej ? `<div style="margin-top:10px"><a class="btn sm" data-lab-ref="${r.id}" href="#/lab">Abrir en laboratorio y editarlo</a></div>` : ""}</details>`;
@@ -189,23 +196,50 @@
 
   /* ------------------------------------------------------------ MOTOR DE PREGUNTAS */
   let ses = null;
-  function armarSesion(modo) {
+  /* Selección con VARIEDAD: prioriza vencidas y no vistas, evita lo visto hace poco, alterna temas y tipos de pregunta. */
+  function seleccionar(pool, n) {
+    const S = store.get(), rec = new Set((S.recientes || []).slice(-40));
+    let cand = pool.filter((q) => !rec.has(q.id)); if (cand.length < n) cand = pool.slice();
+    const score = (q) => { const r = S.srs[q.id]; return (r ? (r.due <= hoy() ? 3 : 0.5 - r.caja * 0.1) : 2) + Math.random() * 1.6; };
+    let rest = cand.map((q) => [q, score(q)]).sort((a, b) => b[1] - a[1]).map((x) => x[0]); const out = [];
+    while (out.length < n && rest.length) {
+      const l1 = out[out.length - 1], l2 = out[out.length - 2];
+      let i = rest.findIndex((q) => !(l1 && q.topic === l1.topic) && !(l1 && l2 && q.type === l1.type && q.type === l2.type));
+      if (i < 0) i = 0; out.push(rest.splice(i, 1)[0]);
+    }
+    return out;
+  }
+  // convierte preguntas dinámicas (generadores) en preguntas concretas y calcula las respuestas ejecutando SQL
+  const ctx = { run: async (db, q) => sql.correr(db, q, true) };
+  async function materializar(q0) {
+    let q = q0;
+    if (q0.type === "gen") { const g = await q0.fn(ctx); q = Object.assign({ id: q0.id, sem: q0.sem, topic: q0.topic, dyn: true }, g); }
+    else q = Object.assign({}, q0);
+    if (q.type === "num" && q.ans === undefined) {
+      const r = await sql.correr(q.db, q.code, true);
+      q.ans = r.error ? null : q.calc === "rows" ? r.rows.length : (r.rows[0] ? Number(r.rows[0][0]) : null);
+    }
+    return q;
+  }
+  async function armarSesion(modo) {
     const S = store.get(), todas = FGD.preguntas;
     const venc = store.vencidas().map((id) => FGD.pregPorId[id]).filter(Boolean);
-    const nuevas = (arr) => arr.filter((q) => !S.srs[q.id]);
     let qs = [], titulo = "", sim = false;
-    if (modo === "mision") { titulo = "Misión del día"; qs = barajar(venc).slice(0, 5); const faltan = 8 - qs.length; const peso = (q) => (S.srs[q.id] ? 1 : 0); qs = qs.concat(barajar(nuevas(todas)).slice(0, faltan)); if (qs.length < 8) qs = qs.concat(barajar(todas.filter((q) => !qs.includes(q))).slice(0, 8 - qs.length)); }
-    else if (modo === "repaso") { titulo = "Repaso espaciado"; qs = barajar(venc).slice(0, 15); }
+    if (modo === "mision") { titulo = "Misión del día"; qs = seleccionar(venc, 4); qs = qs.concat(seleccionar(todas.filter((q) => !qs.includes(q)), 8 - qs.length)); }
+    else if (modo === "repaso") { titulo = "Repaso espaciado"; qs = seleccionar(venc, 15); }
     else if (modo === "errores") { titulo = "Practicar mis errores"; qs = S.errores.map((e) => FGD.pregPorId[e.id]).filter(Boolean).slice(0, 15); }
-    else if (modo[0] === "s" && !isNaN(modo.slice(1))) { const n = +modo.slice(1); titulo = "Práctica · Semana " + n; const ws = todas.filter((q) => q.sem === n); qs = barajar(ws.filter((q) => !store.dominada(q.id))).concat(barajar(ws.filter((q) => store.dominada(q.id)))).slice(0, 12); }
-    else if (modo === "simulacro") { titulo = "Simulacro Pa1"; sim = true; const pick = (n, k) => barajar(todas.filter((q) => q.sem === n)).slice(0, k); qs = barajar([].concat(pick(1, 5), pick(2, 8), pick(3, 10), pick(4, 7))); }
+    else if (modo[0] === "s" && !isNaN(modo.slice(1))) { const n = +modo.slice(1); titulo = "Práctica · Semana " + n; qs = seleccionar(todas.filter((q) => q.sem === n), 12); }
+    else if (modo.startsWith("q:")) { titulo = "Pregunta suelta"; qs = modo.slice(2).split(",").map((id) => FGD.pregPorId[id]).filter(Boolean); }
+    else if (modo === "simulacro") { titulo = "Simulacro Pa1"; sim = true; const pick = (n, k) => seleccionar(todas.filter((q) => q.sem === n), k); qs = [].concat(pick(1, 5), pick(2, 8), pick(3, 10), pick(4, 7)); qs = qs.map((q) => [q, Math.random()]).sort((a, b) => a[1] - b[1]).map((x) => x[0]); }
+    qs = await Promise.all(qs.map(materializar)); qs = qs.filter((q) => !(q.type === "num" && q.ans === null));
+    S.recientes = (S.recientes || []).concat(qs.map((q) => q.id)).slice(-80); store.guardar();
     return { modo, titulo, qs, i: 0, ok: 0, resp: [], sim, ini: Date.now(), limite: 45 * 60 };
   }
-  function vPractica(a) { ses = armarSesion(a[0] || "mision"); if (!ses.qs.length) return sinPreguntas(ses.titulo); pintaPregunta(); }
-  function vRepaso() { ses = armarSesion("repaso"); if (!ses.qs.length) { main().innerHTML = `<div class="kicker">Repaso diario</div><h1 class="h1">Nada que repasar hoy 🎉</h1><p class="lead">Cuando falles o completes preguntas, la web programará repasos a 1, 3, 7, 14 y 30 días. Mientras tanto, practica una semana.</p><div class="row" style="margin-top:16px"><a class="btn primary" href="#/practica/mision">Misión del día</a><a class="btn" href="#/semana/1">Ir a las semanas</a></div>`; return; } pintaPregunta(); }
+  async function vPractica(a) { main().innerHTML = '<div class="muted" style="padding:30px">Preparando preguntas…</div>'; ses = await armarSesion(a[0] || "mision"); if (!ses.qs.length) return sinPreguntas(ses.titulo); pintaPregunta(); }
+  async function vRepaso() { ses = await armarSesion("repaso"); if (!ses.qs.length) { main().innerHTML = `<div class="kicker">Repaso diario</div><h1 class="h1">Nada que repasar hoy 🎉</h1><p class="lead">Cuando falles o completes preguntas, la web programará repasos a 1, 3, 7, 14 y 30 días. Mientras tanto, practica una semana.</p><div class="row" style="margin-top:16px"><a class="btn primary" href="#/practica/mision">Misión del día</a><a class="btn" href="#/semana/1">Ir a las semanas</a></div>`; return; } pintaPregunta(); }
   function vErrores() {
     const S = store.get(); const es = S.errores.map((e) => FGD.pregPorId[e.id]).filter(Boolean);
-    main().innerHTML = `<div class="kicker">Aprender del error</div><h1 class="h1">Mis errores</h1><p class="lead">Las preguntas que fallaste, con su explicación. Los errores repetidos son los que más te enseñan.</p>${es.length ? `<div class="row" style="margin:14px 0"><a class="btn primary" href="#/practica/errores">▶ Practicar mis errores</a></div><div class="grid">${es.map((q) => `<div class="card"><div class="row"><span class="chip">Sem ${q.sem}</span><span class="chip">${q.type === "sql" ? "SQL" : q.type === "order" ? "Ordenar" : "Opción múltiple"}</span><span class="sp"></span><span class="chip coral">${(S.srs[q.id] || {}).fallos || 1} fallo(s)</span></div><p style="margin:8px 0;font-weight:700">${esc(q.q)}</p><p class="muted" style="font-size:14px">${esc(q.why)}</p></div>`).join("")}</div>` : '<div class="card" style="margin-top:14px">Aún no hay errores registrados. ¡Bien! Practica una semana para ponerte a prueba.</div>'}`;
+    main().innerHTML = `<div class="kicker">Aprender del error</div><h1 class="h1">Mis errores</h1><p class="lead">Las preguntas que fallaste, con su explicación. Los errores repetidos son los que más te enseñan.</p>${es.length ? `<div class="row" style="margin:14px 0"><a class="btn primary" href="#/practica/errores">▶ Practicar mis errores</a></div><div class="grid">${es.map((q) => `<div class="card"><div class="row"><span class="chip">Sem ${q.sem}</span><span class="chip">${({ sql: "SQL", order: "Ordenar", num: "Cálculo", fill: "Completar", match: "Relacionar", multi: "Selección múltiple", gen: "Dinámica" })[q.type] || "Opción múltiple"}</span><span class="sp"></span><span class="chip coral">${(S.srs[q.id] || {}).fallos || 1} fallo(s)</span></div><p style="margin:8px 0;font-weight:700">${esc(q.q)}</p><p class="muted" style="font-size:14px">${esc(q.why)}</p></div>`).join("")}</div>` : '<div class="card" style="margin-top:14px">Aún no hay errores registrados. ¡Bien! Practica una semana para ponerte a prueba.</div>'}`;
   }
   function sinPreguntas(t) { main().innerHTML = `<h1 class="h1">${esc(t)}</h1><div class="card">No hay preguntas para esta selección todavía.</div><p style="margin-top:12px"><a class="btn" href="#/">Volver</a></p>`; }
 
@@ -222,14 +256,25 @@
     } else if (tipo === "order") {
       q._sel = []; q._pool = barajar(q.items);
       cuerpo = `<div class="muted" style="font-size:14px">Toca los pasos en el orden correcto:</div><div class="pill-list" id="sel"></div><div class="pill-list" id="pool" style="border-style:solid;border-color:transparent;padding:0"></div><div class="row"><button class="btn sm" id="undo">↶ Deshacer</button><button class="btn primary" id="chk">Comprobar</button></div>`;
+    } else if (tipo === "num") {
+      cuerpo = (q.code ? sql.bloque(q.code, "Consulta · " + FGD.datasets[q.db].nombre) : "") + `<div class="row" style="margin-top:8px"><input type="text" id="num" inputmode="decimal" autocomplete="off" placeholder="Escribe tu respuesta (número)" style="max-width:280px"><button class="btn primary" id="chk">Comprobar</button></div>`;
+    } else if (tipo === "multi") {
+      q._ord = barajar(q.opts.map((o, i) => i)); q._sel = new Set();
+      cuerpo = `<div class="muted" style="font-size:14px;margin-bottom:6px">Marca TODAS las que correspondan:</div>` + q._ord.map((oi) => `<button class="opt" data-m="${oi}">${esc(q.opts[oi])}</button>`).join("") + `<div class="row" style="margin-top:8px"><button class="btn primary" id="chk">Comprobar</button></div>`;
+    } else if (tipo === "fill") {
+      q._fill = q.blanks.map(() => null); q._pool = barajar(q.blanks.concat(q.extra || []));
+      cuerpo = `<div class="muted" style="font-size:14px">Toca las palabras para completar los espacios (en orden):</div><div class="code"><pre id="fillcode" style="white-space:pre-wrap"></pre></div><div class="pill-list" id="pool" style="border-style:solid;border-color:transparent;padding:0"></div><div class="row"><button class="btn sm" id="undo">↶ Deshacer</button><button class="btn primary" id="chk">Comprobar</button></div>`;
+    } else if (tipo === "match") {
+      q._izq = q.pairs.map((p, i) => i); q._der = barajar(q.pairs.map((p, i) => i)); q._map = {}; q._cur = null;
+      cuerpo = `<div class="muted" style="font-size:14px;margin-bottom:6px">Toca un elemento de la izquierda y luego su pareja de la derecha. Toca de nuevo para deshacer.</div><div class="vsplit"><div id="mizq"></div><div id="mder"></div></div><div class="row" style="margin-top:10px"><button class="btn primary" id="chk">Comprobar</button></div>`;
     } else {
       cuerpo = `<div class="row" style="margin-bottom:6px"><span class="chip sky">${FGD.datasets[q.db].nombre}</span><span class="muted" style="font-size:13px">Tablas: ${Object.keys(FGD.datasets[q.db].tablas).join(", ")}</span></div><textarea class="ed" id="ans" spellcheck="false" rows="5" placeholder="Escribe tu consulta SQL aquí…"></textarea>
       <div class="row" style="margin:10px 0"><button class="btn primary" id="chk">Comprobar</button><button class="btn sm" id="prev">▶ Probar mi consulta</button><button class="btn sm" id="hint">💡 Pista</button></div><div id="pv"></div>`;
     }
-    main().innerHTML = `<div class="qwrap">${cabeceraSes()}<div class="qtext">${esc(q.q)}</div>${cuerpo}<div id="fb"></div></div>`;
+    main().innerHTML = `<div class="qwrap">${cabeceraSes()}<div class="row" style="margin-bottom:4px"><span class="chip tone" ${tono(TOPIC_COLOR(q.topic))}>${esc(q.topic || "")}</span><span class="chip">Sem ${q.sem}</span></div><div class="qtext">${esc(q.q)}</div>${cuerpo}<div id="fb"></div></div>`;
     if (s.sim) arrancaTimer();
     if (tipo === "mcq") $$(".opt").forEach((b) => (b.onclick = (e) => responde(q, +b.dataset.o === q.a, b, e)));
-    else if (tipo === "order") ordenUI(q); else sqlUI(q);
+    else if (tipo === "order") ordenUI(q); else if (tipo === "num") numUI(q); else if (tipo === "multi") multiUI(q); else if (tipo === "fill") fillUI(q); else if (tipo === "match") matchUI(q); else sqlUI(q);
     const key = (e) => { if (e.key >= "1" && e.key <= "4" && tipo === "mcq" && !$(".opt.locked")) { const b = $$(".opt")[+e.key - 1]; if (b) b.click(); } if (e.key === "Enter" && $("#sig") && document.activeElement.tagName !== "TEXTAREA") $("#sig").click(); };
     document.addEventListener("keydown", key); const prev = limpiar; limpiar = () => { document.removeEventListener("keydown", key); if (ses && ses.timer) clearInterval(ses.timer); if (prev) prev(); };
   }
@@ -243,6 +288,52 @@
       $$("[data-p]").forEach((b) => (b.onclick = () => { q._sel.push(b.dataset.p); pinta(); })); };
     pinta(); $("#undo").onclick = () => { q._sel.pop(); pinta(); };
     $("#chk").onclick = (e) => { if (q._sel.length < q.items.length) return store.toast("Coloca todos los pasos"); const ok = q._sel.join("|") === q.items.join("|"); $("#chk").disabled = true; responde(q, ok, null, e, "Orden correcto: " + q.items.join(" → ")); };
+  }
+  function numUI(q) {
+    const inp = $("#num"); inp.focus();
+    const go = (e) => {
+      const v = Number(String(inp.value).replace(",", ".").trim()); if (inp.value.trim() === "" || isNaN(v)) return store.toast("Escribe un número");
+      const ok = q.round === 0 ? Math.round(v) === Math.round(q.ans) : Math.abs(v - q.ans) < 0.01;
+      $("#chk").disabled = true; inp.disabled = true; responde(q, ok, null, e, "Respuesta correcta: " + (Math.round(q.ans * 100) / 100));
+    };
+    $("#chk").onclick = go; inp.addEventListener("keydown", (e) => { if (e.key === "Enter") go(e); });
+  }
+  function multiUI(q) {
+    $$("[data-m]").forEach((b) => (b.onclick = () => { const k = +b.dataset.m; if (q._sel.has(k)) q._sel.delete(k); else q._sel.add(k); b.classList.toggle("sel", q._sel.has(k)); }));
+    $("#chk").onclick = (e) => {
+      if (!q._sel.size) return store.toast("Marca al menos una");
+      const bien = new Set(q.a), ok = q._sel.size === bien.size && [...q._sel].every((k) => bien.has(k));
+      $("#chk").disabled = true; $$("[data-m]").forEach((b) => { const k = +b.dataset.m; b.classList.add("locked"); b.classList.remove("sel"); if (bien.has(k)) b.classList.add("ok"); else if (q._sel.has(k)) b.classList.add("bad"); });
+      responde(q, ok, null, e, "Correctas: " + q.a.map((k) => q.opts[k]).join(" · "));
+    };
+  }
+  function fillUI(q) {
+    const pinta = () => {
+      let i = 0; const partes = q.code.split("___");
+      $("#fillcode").innerHTML = partes.map((t, k) => sql.resaltar(t) + (k < q.blanks.length ? `<button class="slot ${q._fill[k] ? "full" : ""}" data-k="${k}">${q._fill[k] ? esc(q._fill[k]) : "&nbsp;&nbsp;&nbsp;&nbsp;"}</button>` : "")).join("");
+      const usados = q._fill.filter(Boolean); const cont = {}; usados.forEach((u) => (cont[u] = (cont[u] || 0) + 1));
+      $("#pool").innerHTML = q._pool.map((x) => { if (cont[x]) { cont[x]--; return ""; } return `<button class="pill" data-w="${esc(x)}">${esc(x)}</button>`; }).join("");
+      $$("[data-w]").forEach((b) => (b.onclick = () => { const k = q._fill.indexOf(null); if (k >= 0) { q._fill[k] = b.dataset.w; pinta(); } }));
+      $$("[data-k]").forEach((b) => (b.onclick = () => { q._fill[+b.dataset.k] = null; pinta(); }));
+    };
+    pinta(); $("#undo").onclick = () => { for (let k = q._fill.length - 1; k >= 0; k--) if (q._fill[k]) { q._fill[k] = null; break; } pinta(); };
+    $("#chk").onclick = (e) => { if (q._fill.includes(null)) return store.toast("Completa todos los espacios"); const ok = q._fill.every((v, k) => v === q.blanks[k]); $("#chk").disabled = true; responde(q, ok, null, e, "Respuesta: " + q.blanks.join(" · ")); };
+  }
+  function matchUI(q) {
+    const col = (k) => CICLO[k % CICLO.length];
+    const pinta = () => {
+      $("#mizq").innerHTML = q._izq.map((i) => { const par = q._map[i]; return `<button class="opt ${q._cur === i ? "sel" : ""}" data-i="${i}" style="${par !== undefined ? "border-color:" + col(i) : ""}">${par !== undefined ? `<span class="dot" style="--c:${col(i)}"></span>` : ""}${esc(q.pairs[i][0])}</button>`; }).join("");
+      $("#mder").innerHTML = q._der.map((j) => { const dueno = Object.keys(q._map).find((k) => q._map[k] === j); return `<button class="opt" data-j="${j}" style="${dueno !== undefined ? "border-color:" + col(+dueno) : ""}">${dueno !== undefined ? `<span class="dot" style="--c:${col(+dueno)}"></span>` : ""}${esc(q.pairs[j][1])}</button>`; }).join("");
+      $$("[data-i]").forEach((b) => (b.onclick = () => { const i = +b.dataset.i; if (q._map[i] !== undefined) { delete q._map[i]; q._cur = null; } else q._cur = i; pinta(); }));
+      $$("[data-j]").forEach((b) => (b.onclick = () => { const j = +b.dataset.j; const dueno = Object.keys(q._map).find((k) => q._map[k] === j); if (dueno !== undefined) { delete q._map[dueno]; pinta(); return; } if (q._cur === null) return store.toast("Primero toca un elemento de la izquierda"); q._map[q._cur] = j; q._cur = null; pinta(); }));
+    };
+    pinta();
+    $("#chk").onclick = (e) => {
+      if (Object.keys(q._map).length < q.pairs.length) return store.toast("Relaciona todos los elementos");
+      const bien = q.pairs.map((p, i) => i).every((i) => q._map[i] === i), ok = bien;
+      $("#chk").disabled = true; $$("[data-i],[data-j]").forEach((b) => b.classList.add("locked"));
+      responde(q, ok, null, e, null, `<div class="muted" style="margin:10px 0 4px">Parejas correctas:</div><ul style="margin-left:20px">${q.pairs.map((p) => `<li><b>${esc(p[0])}</b> → ${esc(p[1])}</li>`).join("")}</ul>`);
+    };
   }
   function sqlUI(q) {
     const ta = $("#ans"); ta.focus();
@@ -262,7 +353,7 @@
     store.registrar(q, ok, ev);
     if (q.type === "mcq") { $$(".opt").forEach((b) => { b.classList.add("locked"); if (+b.dataset.o === q.a) b.classList.add("ok"); }); if (btn && !ok) btn.classList.add("bad"); }
     let res = "";
-    if (q.type === "mcq" && q.code && q.db) res = `<div class="muted" style="margin:10px 0 4px">Resultado real de esa consulta:</div>` + sql.tabla(await sql.correr(q.db, q.code, true), 6);
+    if ((q.type === "mcq" || q.type === "num") && q.code && q.db) res = `<div class="muted" style="margin:10px 0 4px">Resultado real de esa consulta:</div>` + sql.tabla(await sql.correr(q.db, q.code, true), 6);
     $("#fb").innerHTML = `<div class="feedback ${ok ? "ok" : "bad"}"><b>${ok ? "✔ ¡Correcto!" : "✘ Casi…"}</b> <span>${esc(q.why)}</span>${extra ? `<div class="muted" style="margin-top:6px">${esc(extra)}</div>` : ""}${extraHtml || ""}${res}</div><div class="row" style="margin-top:14px"><span class="sp"></span><button class="btn primary" id="sig">${s.i + 1 >= s.qs.length ? "Ver resultado" : "Siguiente"} ▶</button></div>`;
     $("#sig").onclick = () => { s.i++; pintaPregunta(); }; $("#sig").focus();
   }
@@ -282,7 +373,7 @@
       ${s.sim ? `<div class="grid g4" style="margin-top:16px">${porSem.map((p) => `<div class="card stat"><b>${p[1]}/${p[2]}</b><span>Semana ${p[0]}</span></div>`).join("")}</div>` : ""}
       ${falladas.length ? `<h2 class="h2">Para repasar (${falladas.length})</h2><div class="grid">${falladas.map((x) => `<div class="card"><div class="row"><span class="chip">Sem ${x.q.sem}</span></div><p style="margin:8px 0;font-weight:700">${esc(x.q.q)}</p><p class="muted" style="font-size:14px">${esc(x.q.why)}</p></div>`).join("")}</div>` : '<div class="card" style="margin-top:16px">🎯 Sin errores. Las preguntas se volverán a programar para repaso espaciado.</div>'}
       <div class="row" style="margin-top:18px"><button class="btn primary" id="otra">Otra ronda</button><a class="btn" href="#/">Inicio</a><a class="btn" href="#/ref">Referencia rápida</a></div></div>`;
-    $("#otra").onclick = () => { ses = armarSesion(s.modo); if (!ses.qs.length) return sinPreguntas(ses.titulo); pintaPregunta(); };
+    $("#otra").onclick = async () => { main().innerHTML = '<div class="muted" style="padding:30px">Preparando preguntas…</div>'; ses = await armarSesion(s.modo); if (!ses.qs.length) return sinPreguntas(ses.titulo); pintaPregunta(); };
   }
 
   /* ------------------------------------------------------------ SIMULACRO */
